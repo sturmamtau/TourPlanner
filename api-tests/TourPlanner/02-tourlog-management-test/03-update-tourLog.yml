@@ -17,7 +17,6 @@ http:
         "totalDistance": 144,
         "totalTime": 3,
         "rating": 4,
-        "userId": 1,
         "tourId": 1
       }
   auth: inherit

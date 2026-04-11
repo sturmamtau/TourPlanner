@@ -22,7 +22,6 @@ public class TourLogMock : ITourLogRepository
             TotalDistance = 100,
             TotalTime = 120,
             Rating = 5,
-            UserId = 1,
             TourId = 1
         };
 
@@ -35,7 +34,6 @@ public class TourLogMock : ITourLogRepository
             TotalDistance = 50,
             TotalTime = 60,
             Rating = 4,
-            UserId = 1,
             TourId = 1
         };
 
@@ -48,7 +46,6 @@ public class TourLogMock : ITourLogRepository
             TotalDistance = 10,
             TotalTime = 30,
             Rating = 3,
-            UserId = 1,
             TourId = 1
         };
 
@@ -95,7 +92,6 @@ public class TourLogMock : ITourLogRepository
             tourLogToUpdate.TotalDistance = tourLog.TotalDistance;
             tourLogToUpdate.TotalTime = tourLog.TotalTime;
             tourLogToUpdate.Rating = tourLog.Rating;
-            tourLogToUpdate.UserId = tourLog.UserId;
             tourLogToUpdate.TourId = tourLog.TourId;
         }
     }

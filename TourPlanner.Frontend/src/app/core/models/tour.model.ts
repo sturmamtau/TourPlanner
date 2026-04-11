@@ -1,3 +1,5 @@
+import { TourLog } from './tourLog.model';
+
 export enum TransportType {
   Run = 'Run',
   Bike = 'Bike',
@@ -8,13 +10,13 @@ export enum TransportType {
 export interface Tour {
     id: number;
     name: string;
-    description: string;
+    description?: string;
     from: string;
     to: string;
     transportType: TransportType;
     tourDistance: number;
     estimatedTime: number;
-    imagePath: string;
+    imagePath?: string;
     userId: number;
     tourLogs?: TourLog[];
 }
