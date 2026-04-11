@@ -11,7 +11,7 @@ public class TourLog
     public int Id { get; set; }
     public DateTime DateTime { get; set; }
     public string Comment { get; set; }
-    public int Difficulty { get; set; }
+    public Difficulty Difficulty { get; set; }
     public double TotalDistance { get; set; }
     public double TotalTime { get; set; }
     public int Rating { get; set; }

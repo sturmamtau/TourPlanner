@@ -1,0 +1,29 @@
+info:
+  name: 02-create-tourLog
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/tourLogs"
+  body:
+    type: json
+    data: |-
+      {
+        "id": 4,
+        "dateTime": "2026-04-11T16:50:00Z",
+        "comment": "Comment 4 - Great experience",
+        "difficulty": "Easy",
+        "totalDistance": 15,
+        "totalTime": 45,
+        "rating": 4,
+        "userId": 1,
+        "tourId": 1
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

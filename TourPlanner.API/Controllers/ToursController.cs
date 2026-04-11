@@ -24,6 +24,10 @@ public class ToursController : ControllerBase
     [HttpPost]
     public ActionResult Create([FromBody] Tour tour)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         _tourMock.AddTour(tour);
         return Created();
     }
@@ -41,9 +45,17 @@ public class ToursController : ControllerBase
         return Ok();
     }
 
-    [HttpPut]
-    public ActionResult Update([FromBody] Tour tour)
+    [HttpPut("{id}")]
+    public ActionResult Update(int id, [FromBody] Tour tour)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        if (id != tour.Id)
+        {
+            return BadRequest();
+        }
         _tourMock.UpdateTour(tour);
         return Ok();
     }
