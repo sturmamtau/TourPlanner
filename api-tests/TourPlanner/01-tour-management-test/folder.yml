@@ -1,0 +1,7 @@
+info:
+  name: 01-tour-management-test
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit

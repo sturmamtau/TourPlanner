@@ -1,0 +1,36 @@
+info:
+  name: 04-update-tour
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/tours"
+  body:
+    type: json
+    data: |-
+      {
+        "id": 3,
+        "name": "Tour3-new",
+        "description": "Description3-new",
+        "from": "From3-new",
+        "to": "To3-new",
+        "transportType": "Bike",
+        "tourDistance": 20,
+        "estimatedTime": 40,
+        "imagePath": "path/to/image3.jpg-new",
+        "userId": 1
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: ""
+      operator: eq
+      value: ""
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

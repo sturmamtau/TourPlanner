@@ -1,0 +1,30 @@
+info:
+  name: 02-create-tour
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/tours"
+  body:
+    type: json
+    data: |-
+      {
+        "Id": 4,
+        "Name": "Tour4",
+        "Description": "Description4",
+        "From": "From4",
+        "To": "To4",
+        "TransportType": "Walk",
+        "TourDistance": 44,
+        "EstimatedTime": 67,
+        "ImagePath": "path/to/image4.jpg",
+        "UserId": 1
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
