@@ -15,6 +15,6 @@ public class TourLog
     public double TotalDistance { get; set; }
     public double TotalTime { get; set; }
     public int Rating { get; set; }
+    public int UserId { get; set; }
     public int TourId { get; set; }
-    public Tour Tour { get; set; }
 }

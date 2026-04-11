@@ -9,5 +9,11 @@ namespace TourPlanner.DAL.Repositories;
 
 public interface ITourRepository
 {
-    Task<Tour?> GetByIdAsync(int id);
+    List<Tour> GetAllTours();
+    //Tour GetTourById(int id);
+    public void AddTour(Tour tour);
+
+    public void DeleteTour(int id); 
+
+    public void UpdateTour(Tour tour);
 }

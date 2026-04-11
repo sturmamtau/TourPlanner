@@ -13,11 +13,11 @@ public class Tour
     public string Description { get; set; }
     public string From { get; set; }
     public string To { get; set; }
-    public string TransportType { get; set; }
+    public TransportType TransportType { get; set; }
     public int TourDistance { get; set; }
     public int EstimatedTime { get; set; }
     public string ImagePath { get; set; }
 
     public int UserId { get; set; }
-    public ICollection<TourLog> TourLogs { get; set; }
+    public ICollection<TourLog>? TourLogs { get; set; }
 }

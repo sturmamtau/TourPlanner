@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TourPlanner.DAL.Repositories
+namespace TourPlanner.DAL.Repositories;
+
+internal class UserRepository
 {
-    internal class UserRepository
-    {
-    }
 }
