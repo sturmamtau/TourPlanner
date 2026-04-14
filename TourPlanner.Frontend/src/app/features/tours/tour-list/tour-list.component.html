@@ -1,0 +1,30 @@
+<div class="tour-list-container">
+
+  <!-- Laden -->
+  <p *ngIf="isLoading">Touren werden geladen...</p>
+
+  <!-- Fehler -->
+  <p *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <!-- Liste -->
+  <div *ngIf="!isLoading">
+    
+    <h2>Meine Touren</h2>
+
+    <!-- Keine Touren vorhanden -->
+    <p *ngIf="tours.length === 0">Keine Touren vorhanden.</p>
+
+    <!-- Eine Tour pro Eintrag -->
+    <div *ngFor="let tour of tours" class="tour-item">
+      <h3>{{ tour.name }}</h3>
+      <p *ngIf="tour.description">{{ tour.description }}</p>
+      <p>{{ tour.from }} → {{ tour.to }}</p>
+      <p>Typ: {{ tour.transportType }}</p>
+      <p>Distanz: {{ tour.tourDistance }} m</p>
+      <p>Zeit: {{ tour.estimatedTime }} min</p>
+      <img *ngIf="tour.imagePath" [src]="tour.imagePath" alt="Tour Image" />
+    </div>
+
+  </div>
+
+</div>
