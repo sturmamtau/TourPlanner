@@ -15,4 +15,8 @@ export class TourService {
   getAllTours(): Observable<Tour[]>{
       return this.http.get<Tour[]>(`${this.apiUrl}/api/tours`);
   }
+
+  createTour(tour: Tour): Observable<any> {
+      return this.http.post<Tour>(`${this.apiUrl}/api/tours`, tour);
+  }
 }
