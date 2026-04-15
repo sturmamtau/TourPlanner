@@ -78,6 +78,7 @@ public class TourMock : ITourRepository
         {
             Tours.Remove(tourToDelete);
         }
+        Console.WriteLine($"{Tours.Count}");
     }
     public void UpdateTour(Tour tour)
     {

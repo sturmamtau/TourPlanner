@@ -18,6 +18,7 @@ export class TourPageComponent implements OnInit {
     errorMessage: string = "";
     formIsShown : boolean = false; //form zum updaten/neu erstellen angezeigt
     selectedTour: Tour | null = null;
+    
 
     constructor(private tourService: TourService){}
 
@@ -56,9 +57,20 @@ export class TourPageComponent implements OnInit {
       console.log('Tour ausgewählt:', tour);
     }
 
+    formSubmit(formData: Tour){
+        const exists = this.tours.some(t => Number(t.id) === Number(formData.id));
+        if(exists){
+            this.updateTour(formData);
+        }
+        else{
+          this.addTour(formData)
+        }
+    }
+
     //add new tour via tour service
     addTour(formData: Tour): void
     {
+      console.log("add new tour")
       this.tourService.createTour(formData).subscribe({
         next: () => {
             this.hideForm();
@@ -69,11 +81,27 @@ export class TourPageComponent implements OnInit {
 
     deleteTour(): void
     {
-        console.log("tour deleted", this.selectedTour?.name);
+      if(this.selectedTour){
+        this.tourService.deleteTour(this.selectedTour.id).subscribe({
+          next: () => {
+              this.selectedTour = null; // Reset selected tour after deletion
+              this.loadTours();
+          }
+        })
+      }
     }
+    //nur show form statt uodate
 
-    updateTour(): void
+    updateTour(formData: Tour): void
     {
-        console.log("tour updated", this.selectedTour?.name)
+        console.log("update tour")
+        this.tourService.updateTour(formData).subscribe({
+        next: () => {
+            this.hideForm();
+            this.loadTours();
+            //eig tourdetails neu laden
+            this.selectedTour = null;
+        }
+      })
     }
 }
