@@ -59,7 +59,12 @@ public class TourLogMock : ITourLogRepository
 
     public void AddTourLog(TourLog tourLog)
     {
+        if (tourLog.Id == 0)
+        {
+            tourLog.Id = TourLogs.Any() ? TourLogs.Max(tl => tl.Id) + 1 : 1;
+        }
         TourLogs.Add(tourLog);
+
     }
 
     public void DeleteTourLog(int id)

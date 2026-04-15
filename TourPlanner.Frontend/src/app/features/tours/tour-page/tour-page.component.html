@@ -1,6 +1,8 @@
 <div class="tour-page-container">
   <app-tour-list
     [tours]="tours"
+    [isLoading]="isLoading"
+    [errorMessage]="errorMessage"
     (tourSelected)="onTourSelected($event)"
     (showForm)="showForm()">
   </app-tour-list>
@@ -9,7 +11,7 @@
     *ngIf="selectedTour && !formIsShown"
     [tour]="selectedTour"
     (deleteTourEvent)="deleteTour()"
-    (updateTourEvent)="showForm()"
+    (updateTourEvent)="refreshSelectedTour()"
     class="detail-view">
   </app-tour-detail>
 

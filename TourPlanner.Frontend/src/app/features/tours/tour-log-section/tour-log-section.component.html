@@ -1,0 +1,100 @@
+<div class="logs-container">
+  <div class="logs-header">
+    <h3>Tour Logs</h3>
+    <button *ngIf="!isEditing" (click)="isEditing = true" class="btn-add-log">+ Log hinzufügen</button>
+  </div>
+  <p>Anzahl Logs: {{ logs.length }}</p>
+  <table class="logs-table" *ngIf="logs.length > 0; else noLogs">
+    <thead>
+      <tr>
+        <th>Datum</th>
+        <th>Dauer (min)</th>
+        <th>Kommentar</th>
+        <th>Distanz (km)</th>
+        <th>Rating</th>
+        <th>Aktionen</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let log of logs">
+        <td>{{ log.dateTime | date:'dd.MM.yyyy HH:mm' }}</td>
+        <td>{{ log.totalTime }}</td>
+        <td class="log-comment-cell">{{ log.comment }}</td>
+        <td>{{ log.totalDistance }}</td>
+        <td class="stars">{{ log.rating }} ★</td>
+        <td>
+          <button class="btn-action-small" (click)="editLog(log)" title="Bearbeiten">✎</button>
+          <button class="btn-action-small" (click)="deleteLog(log.id)" title="Löschen" style="color: #A32D2D;">🗑</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noLogs>
+    <div style="padding: 14px; font-size: 12px; color: var(--color-text-tertiary);">
+      Noch keine Logs für diese Tour vorhanden.
+    </div>
+  </ng-template>
+
+  <div class="log-form-card" *ngIf="isEditing">
+    <h4 style="font-size: 13px; margin-bottom: 12px; color: var(--color-text-primary);">
+      {{ editingLogId ? 'Log bearbeiten' : 'Neues Log erstellen' }}
+    </h4>
+    
+    <form [formGroup]="logForm" (ngSubmit)="onSubmit(); $event.preventDefault();">
+      <div class="grid-form">
+        
+        <div class="control">
+          <label>Datum & Zeit</label>
+          <input type="datetime-local" formControlName="dateTime">
+          <span class="error-msg" *ngIf="logForm.get('dateTime')?.invalid && logForm.get('dateTime')?.touched">
+            Datum erforderlich
+          </span>
+        </div>
+
+        <div class="control">
+          <label>Schwierigkeit</label>
+          <select formControlName="difficulty">
+            <option *ngFor="let diff of difficulties" [value]="diff">{{ diff }}</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <label>Distanz (km)</label>
+          <input type="number" formControlName="totalDistance" step="0.1">
+          <span class="error-msg" *ngIf="logForm.get('totalDistance')?.invalid && logForm.get('totalDistance')?.touched">
+            Ungültige Distanz
+          </span>
+        </div>
+
+        <div class="control">
+          <label>Zeit (min)</label>
+          <input type="number" formControlName="totalTime">
+          <span class="error-msg" *ngIf="logForm.get('totalTime')?.invalid && logForm.get('totalTime')?.touched">
+            Zeit erforderlich
+          </span>
+        </div>
+
+        <div class="control">
+          <label>Bewertung (1-5)</label>
+          <input type="number" formControlName="rating" min="1" max="5">
+          <span class="error-msg" *ngIf="logForm.get('rating')?.invalid && logForm.get('rating')?.touched">
+            Wert von 1 bis 5
+          </span>
+        </div>
+      </div>
+      
+      <div class="control full-width" style="margin-top: 8px;">
+        <label>Kommentar</label>
+        <textarea formControlName="comment" rows="2" placeholder="Wie war die Tour?"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" (click)="cancel()" class="btn-cancel">Abbrechen</button>
+        <button type="submit" [disabled]="logForm.invalid" class="btn-save">
+          {{ editingLogId ? 'Aktualisieren' : 'Speichern' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

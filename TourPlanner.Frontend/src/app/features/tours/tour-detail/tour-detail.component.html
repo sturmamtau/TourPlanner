@@ -31,6 +31,12 @@
     </div>
   </div>
 
+  <app-tour-log-section 
+  [tourId]="tour.id" 
+  [logs]="tour.tourLogs || []"
+  (logChanged)="onLogChanged()">
+</app-tour-log-section>
+
   <!--<div class="logs-section" *ngIf="tour.logs && tour.logs.length > 0">
     <div class="logs-header">
       <span>Tour Logs</span>

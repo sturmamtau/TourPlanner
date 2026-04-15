@@ -10,8 +10,8 @@ namespace TourPlanner.API.Controllers;
 public class TourLogsController : ControllerBase
 {
     public TourLogMock _tourLogMock;
-    public TourLogsController() { 
-        _tourLogMock = new TourLogMock();
+    public TourLogsController(TourLogMock TourLogMock) { 
+        _tourLogMock = TourLogMock;
     }
 
     [HttpGet]
@@ -28,7 +28,7 @@ public class TourLogsController : ControllerBase
             return BadRequest(ModelState);
         }
         _tourLogMock.AddTourLog(tourLog);
-        return Created();
+        return Created("", tourLog);
     }
 
     [HttpPut("{id}")]

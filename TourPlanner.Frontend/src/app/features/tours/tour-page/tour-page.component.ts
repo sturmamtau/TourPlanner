@@ -92,7 +92,7 @@ export class TourPageComponent implements OnInit {
     }
     //nur show form statt uodate
 
-    updateTour(formData: Tour): void
+    /*updateTour(formData: Tour): void
     {
         console.log("update tour")
         this.tourService.updateTour(formData).subscribe({
@@ -104,4 +104,46 @@ export class TourPageComponent implements OnInit {
         }
       })
     }
+    */
+   updateTour(formData: Tour): void {
+      console.log("update tour");
+      this.tourService.updateTour(formData).subscribe({
+        next: () => {
+          this.hideForm();
+      
+      // 1. Lade alle Touren neu
+        this.tourService.getAllTours().subscribe({
+          next: (data) => {
+            this.tours = data;
+            
+            // 2. Finde die aktuell ausgewählte Tour in der neuen Liste wieder
+            const updatedTour = this.tours.find(t => t.id === formData.id);
+            if (updatedTour) {
+              this.selectedTour = updatedTour; // Referenz aktualisieren
+            }
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+  }
+
+  refreshSelectedTour(): void {
+    this.isLoading = true;
+      this.tourService.getAllTours().subscribe({
+        next: (data) => {
+          this.tours = data;
+      // WICHTIG: Die Referenz der ausgewählten Tour in der neuen Liste finden
+          if (this.selectedTour) {
+            const found = this.tours.find(t => t.id === this.selectedTour?.id);
+            this.selectedTour = found ? found : null;
+          }
+          this.isLoading = false;
+        },
+        error: () => {
+          this.errorMessage = "Fehler beim Aktualisieren";
+          this.isLoading = false;
+        }
+      });
+  }
 }

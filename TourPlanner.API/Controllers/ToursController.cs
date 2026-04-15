@@ -13,11 +13,13 @@ public class ToursController : ControllerBase
 {
     //private readonly TourPlannerContext _context;
     private readonly TourMock _tourMock;
+    private readonly TourLogMock _tourLogMock;
 
-    public ToursController(TourPlannerContext context)
+    public ToursController(TourPlannerContext context, TourMock tourMock, TourLogMock tourLogMock)
     {
         //_context = context;
-        _tourMock = new TourMock();
+        _tourMock = tourMock;
+        _tourLogMock = tourLogMock;
     }
 
     // Speichert eine neue Tour, die aus dem Angular-Formular kommt
@@ -35,7 +37,17 @@ public class ToursController : ControllerBase
     [HttpGet]
     public ActionResult<List<Tour>> GetAll()
     {
-        return Ok(_tourMock.GetAllTours());
+        var tours = _tourMock.GetAllTours();
+        var logs = _tourLogMock.GetAllTourLogs();
+
+        // Jede Tour bekommt ihre passenden Logs zugewiesen
+        foreach (var tour in tours)
+        {
+            tour.TourLogs = logs.Where(l => l.TourId == tour.Id).ToList();
+            Console.WriteLine($"Tour {tour.Id} hat {tour.TourLogs.Count} Logs");
+        }
+
+        return Ok(tours);
     }
 
     [HttpDelete("{id}")]

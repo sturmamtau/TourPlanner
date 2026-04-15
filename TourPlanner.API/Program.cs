@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using TourPlanner.DAL;
+using TourPlanner.DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,8 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+builder.Services.AddSingleton<TourMock>();
+builder.Services.AddSingleton<TourLogMock>();
 var app = builder.Build();
 
 

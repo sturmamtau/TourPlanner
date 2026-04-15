@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 })
 export class TourListComponent implements OnInit {
     @Input() tours: Tour[] = []; //liste von den touren
+    @Input() isLoading: boolean = false;
+    @Input() errorMessage: string = "";
 
     @Output() tourSelected = new EventEmitter<Tour>();
     @Output() showForm = new EventEmitter<void>();
