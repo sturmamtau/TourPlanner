@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { TourFormComponent } from '../tour-form/tour-form.component';
 import { TourDetailComponent } from '../tour-detail/tour-detail.component';
 import { TourListComponent } from '../tour-list/tour-list.component';
+import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-tour-page',
-  imports: [CommonModule, TourFormComponent, TourDetailComponent, TourListComponent],
+  imports: [CommonModule, TourFormComponent, TourDetailComponent, TourListComponent, SearchBarComponent],
   templateUrl: './tour-page.component.html',
   styleUrl: './tour-page.component.css'
 })
@@ -56,6 +57,11 @@ export class TourPageComponent implements OnInit {
       this.selectedTour = tour;
       console.log('Tour ausgewählt:', tour);
     }
+
+    onSearch(search: string){
+      console.log(`searching for ${search}`)
+    }
+
 
     formSubmit(formData: Tour){
         const exists = this.tours.some(t => Number(t.id) === Number(formData.id));
