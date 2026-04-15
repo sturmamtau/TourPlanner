@@ -1,0 +1,20 @@
+<div class="tour-page-container">
+  <app-tour-list
+    (tourSelected)="onTourSelected($event)"
+    (showForm)="showForm()">
+  </app-tour-list>
+
+  <app-tour-detail
+    *ngIf="selectedTour && !formIsShown"
+    [tour]="selectedTour"
+    (deleteTourEvent)="deleteTour()"
+    (updateTourEvent)="updateTour()"
+    class="detail-view">
+  </app-tour-detail>
+
+  <app-tour-form
+    *ngIf="formIsShown"
+    (formSubmitted)="addTour($event)"
+    (formCancelled)="hideForm()">
+  </app-tour-form>
+</div>

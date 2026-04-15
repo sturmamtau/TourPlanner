@@ -1,13 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Tour } from '../../../core/models/tour.model';
 import { TourService } from '../../../core/services/tour.service';
 import { CommonModule } from '@angular/common';
-import { TourFormComponent } from '../tour-form/tour-form.component';
-import { TourDetailComponent } from '../tour-detail/tour-detail.component';
 
 @Component({
   selector: 'app-tour-list',
-  imports: [CommonModule, TourFormComponent, TourDetailComponent],
+  imports: [CommonModule],
   templateUrl: './tour-list.component.html',
   styleUrl: './tour-list.component.css'
 })
@@ -15,8 +13,9 @@ export class TourListComponent implements OnInit {
     tours: Tour[] = []; //liste von den touren
     isLoading : boolean = false;
     errorMessage: string = "";
-    formIsShown : boolean = false; //form zum updaten/neu erstellen angezeigt
-    selectedTour: Tour | null = null;
+
+    @Output() tourSelected = new EventEmitter<Tour>();
+    @Output() showForm = new EventEmitter<void>();
 
     constructor(private tourService: TourService){}
 
@@ -40,29 +39,13 @@ export class TourListComponent implements OnInit {
         });
     }
 
-    hideForm()
-    {
-      this.formIsShown = false;
-    }
-    showForm()
-    {
-      this.formIsShown = true;
-    }
-    
     //select tour for detal view
     selectTour(tour: Tour) {
-    this.selectedTour = tour;
-    console.log('Tour ausgewählt:', tour);
+      this.tourSelected.emit(tour);
+      console.log('Tour ausgewählt:', tour);
     }
 
-    //add new tour via tour service
-    addTour(formData: Tour): void
-    {
-      this.tourService.createTour(formData).subscribe({
-        next: () => {
-            this.hideForm();
-            this.loadTours();
-        }
-      })
+    onShowForm() {
+      this.showForm.emit();
     }
 }
