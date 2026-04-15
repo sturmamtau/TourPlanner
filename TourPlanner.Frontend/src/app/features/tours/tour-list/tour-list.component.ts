@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Tour } from '../../../core/models/tour.model';
 import { TourService } from '../../../core/services/tour.service';
 import { CommonModule } from '@angular/common';
@@ -10,9 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './tour-list.component.css'
 })
 export class TourListComponent implements OnInit {
-    tours: Tour[] = []; //liste von den touren
-    isLoading : boolean = false;
-    errorMessage: string = "";
+    @Input() tours: Tour[] = []; //liste von den touren
 
     @Output() tourSelected = new EventEmitter<Tour>();
     @Output() showForm = new EventEmitter<void>();
@@ -20,23 +18,7 @@ export class TourListComponent implements OnInit {
     constructor(private tourService: TourService){}
 
     ngOnInit(): void {
-      this.loadTours();
-    }
-
-    //lade liste aller touren
-    loadTours(): void
-    {
-        this.isLoading = true;
-        this.tourService.getAllTours().subscribe({
-          next: (data) => {
-            this.tours = data;
-            this.isLoading = false
-          },
-          error: (err) => {
-            this.errorMessage = "couldnt load tours";
-            this.isLoading = false;
-          }
-        });
+      // Removed loadTours() as tours are now passed as input
     }
 
     //select tour for detal view
