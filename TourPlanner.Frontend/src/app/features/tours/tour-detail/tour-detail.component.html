@@ -1,0 +1,46 @@
+<div class="detail" *ngIf="tour">
+  
+  <div class="detail-header">
+    <div class="detail-title">{{ tour.name }}</div>
+    <div class="detail-actions">
+      <button class="btn-edit">Bearbeiten</button>
+      <button class="btn-del">Löschen</button>
+    </div>
+  </div>
+
+  <div class="map-placeholder">
+    <span>🗺 Karte für {{ tour.name }} wird hier angezeigt</span>
+  </div>
+
+  <div class="attrs">
+    <div class="attr-card">
+      <div class="attr-label">Von</div>
+      <div class="attr-value">{{ tour.from }}</div>
+    </div>
+    <div class="attr-card">
+      <div class="attr-label">Nach</div>
+      <div class="attr-value">{{ tour.to }}</div>
+    </div>
+    <div class="attr-card">
+      <div class="attr-label">Transportmittel</div>
+      <div class="attr-value">{{ tour.transportType }}</div>
+    </div>
+    <div class="attr-card" *ngIf="tour.estimatedTime">
+      <div class="attr-label">Geschätzte Zeit</div>
+      <div class="attr-value">{{ tour.estimatedTime }} min</div>
+    </div>
+  </div>
+
+  <!--<div class="logs-section" *ngIf="tour.logs && tour.logs.length > 0">
+    <div class="logs-header">
+      <span>Tour Logs</span>
+      <button class="btn-add-log">+ Log hinzufügen</button>
+    </div>
+    
+    <div *ngFor="let log of tour.logs" class="log-row">
+      <div class="log-date">{{ log.date }}</div>
+      <div class="log-comment">{{ log.comment }}</div>
+      <div class="stars">{{ log.rating }} ★</div>
+    </div>
+  </div>*/ -->
+</div>

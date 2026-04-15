@@ -17,7 +17,10 @@
       <button (click)="showForm()" class="add-tour-button">+ Add Tour</button>
     </div>
     <!-- Eine Tour pro Eintrag -->
-    <div *ngFor="let tour of tours" class="tour-item">
+    <div *ngFor="let tour of tours" 
+        class="tour-item"
+        [class.active]="selectedTour === tour"
+        (click)="selectTour(tour)">
       <div class="tour-name">{{tour.name}}</div>
       <div>
         {{tour.from}} → {{tour.to}}
@@ -30,8 +33,16 @@
 
   </div>
 
+  <app-tour-detail
+    *ngIf="selectedTour && !formIsShown" 
+    [tour]="selectedTour"
+    class="detail-view">
+  </app-tour-detail>
+  
   <app-tour-form
     *ngIf="formIsShown"
+
     (formSubmitted)="addTour($event)"
+
     (formCancelled)="hideForm()">
   </app-tour-form>
