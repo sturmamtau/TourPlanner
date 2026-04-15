@@ -1,21 +1,26 @@
+
 <div class="tour-page-container">
   <app-tour-list
-    [tours]="tours"
-    (tourSelected)="onTourSelected($event)"
-    (showForm)="showForm()">
+  [tours]="tours"
+  (tourSelected)="onTourSelected($event)"
+  (showForm)="showForm()">
   </app-tour-list>
 
+  
   <app-tour-detail
-    *ngIf="selectedTour && !formIsShown"
-    [tour]="selectedTour"
-    (deleteTourEvent)="deleteTour()"
-    (updateTourEvent)="showForm()"
-    class="detail-view">
-  </app-tour-detail>
+  *ngIf="selectedTour && !formIsShown"
+  [tour]="selectedTour"
+  (deleteTourEvent)="deleteTour()"
+  (updateTourEvent)="showForm()"
+  class="detail-view">
+</app-tour-detail>
 
-  <app-tour-form
+<app-tour-form
     *ngIf="formIsShown"
     (formSubmitted)="formSubmit($event)"
     (formCancelled)="hideForm()">
   </app-tour-form>
+  <app-search-bar
+    (searchChanged) = "onSearch($event)">
+  </app-search-bar>
 </div>

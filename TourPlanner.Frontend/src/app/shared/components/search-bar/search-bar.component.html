@@ -1,0 +1,16 @@
+<div class="search-bar">
+  <span class="search-icon">🔍</span>
+  <input
+    [(ngModel)]="searchTerm"
+    (ngModelChange)="onSearch()"
+    [placeholder]="placeholder"
+    class="search-input"
+    type="text"
+  />
+  <button
+    *ngIf="searchTerm.length > 0"
+    (click)="onClear()"
+    class="clear-button">
+    ✕
+  </button>
+</div>
