@@ -1,39 +1,37 @@
 <div class="form-container">
-  <h3>Neue Tour erstellen</h3>
+  <h3>Tour konfigurieren</h3>
 
   <div class="form-group">
-    <label>Id</label>
-    <input [(ngModel)]="formData.id" name="id" placeholder="Tour Id" />
-  </div>
-  <div class="form-group">
-    <label>Name</label>
-    <input [(ngModel)]="formData.name" name="name" placeholder="Tour Name" />
+    <label>Name der Tour</label>
+    <input [(ngModel)]="formData.name" name="name" placeholder="z.B. Alpenüberquerung" />
   </div>
 
   <div class="form-group">
     <label>Beschreibung</label>
-    <input [(ngModel)]="formData.description" name="description" placeholder="Beschreibung" />
+    <input [(ngModel)]="formData.description" name="description" placeholder="Was zeichnet diese Tour aus?" />
+  </div>
+
+  <div class="form-row" style="display: flex; gap: 15px;">
+    <div class="form-group" style="flex: 1;">
+      <label>Startort</label>
+      <input [(ngModel)]="formData.from" name="from" placeholder="Von..." />
+    </div>
+
+    <div class="form-group" style="flex: 1;">
+      <label>Zielort</label>
+      <input [(ngModel)]="formData.to" name="to" placeholder="Nach..." />
+    </div>
   </div>
 
   <div class="form-group">
-    <label>Von</label>
-    <input [(ngModel)]="formData.from" name="from" placeholder="Startort" />
-  </div>
-
-  <div class="form-group">
-    <label>Nach</label>
-    <input [(ngModel)]="formData.to" name="to" placeholder="Zielort" />
-  </div>
-
-  <div class="form-group">
-    <label>Transport Typ</label>
+    <label>Transportmittel</label>
     <select [(ngModel)]="formData.transportType" name="transportType">
       <option *ngFor="let type of transportTypeOptions" [value]="type">{{ type }}</option>
     </select>
   </div>
 
   <div class="form-actions">
-    <button (click)="onSubmit()">Speichern</button>
-    <button (click)="onCancel()">Abbrechen</button>
+    <button (click)="onSubmit()">Tour speichern</button>
+    <button (click)="onCancel()">Verwerfen</button>
   </div>
 </div>

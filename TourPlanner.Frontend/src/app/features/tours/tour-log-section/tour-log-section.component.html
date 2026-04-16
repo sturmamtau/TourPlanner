@@ -73,6 +73,12 @@
           <span class="error-msg" *ngIf="logForm.get('totalTime')?.invalid && logForm.get('totalTime')?.touched">
             Zeit erforderlich
           </span>
+          <span class="error-msg" *ngIf="logForm.get('totalTime')?.touched && logForm.get('totalTime')?.errors?.['min']">
+            Zeit muss positiv sein.
+          </span>
+          <span class="error-msg" *ngIf="logForm.get('totalTime')?.touched && logForm.get('totalTime')?.errors?.['max']">
+            Maximal 20.160 Min. (2 Wochen) erlaubt.
+          </span>
         </div>
 
         <div class="control">

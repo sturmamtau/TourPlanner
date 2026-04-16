@@ -1,3 +1,4 @@
+/*
 .logs-container {
     background: var(--color-background-primary);
     border-radius: var(--border-radius-lg);
@@ -142,4 +143,47 @@ select.ng-invalid.ng-touched {
 .log-comment-cell:hover {
     white-space: normal;
     overflow: visible;
+}
+
+alte version vor flex */
+
+/* PC First */
+.grid-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 Spalten für Inputs */
+  gap: 15px;
+}
+
+.full-width {
+  grid-column: span 3; /* Kommentarzeile geht über alle 3 Spalten */
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .grid-form {
+    grid-template-columns: 1fr 1fr; /* 2 Spalten auf Mobile */
+  }
+  .full-width {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-form {
+    grid-template-columns: 1fr; /* 1 Spalte auf Mini-Screens */
+  }
+  .full-width {
+    grid-column: span 1;
+  }
+}
+
+.logs-container {
+  width: 100%;
+  overflow-x: auto; /* Ermöglicht horizontales Scrollen auf kleinen Screens */
+  -webkit-overflow-scrolling: touch;
+}
+
+.logs-table {
+  min-width: 600px; /* Verhindert, dass die Tabelle zu sehr gequetscht wird */
+  width: 100%;
 }

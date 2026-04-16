@@ -68,7 +68,17 @@ public class TourMock : ITourRepository
     //Tour GetTourById(int id);
     public void AddTour(Tour tour)
     {
+        int nextId = Tours.Any() ? Tours.Max(t => t.Id) + 1 : 1;
+    
+        tour.Id = nextId;
+    
+        // Falls die Tour-Logs Liste in der neuen Tour null ist, initialisieren
+        if (tour.TourLogs == null) {
+            tour.TourLogs = new List<TourLog>();
+        }
+
         Tours.Add(tour);
+        Console.WriteLine($"[Mock] Neue Tour erstellt: {tour.Name} mit ID {tour.Id}");
     }
 
     public void DeleteTour(int id)

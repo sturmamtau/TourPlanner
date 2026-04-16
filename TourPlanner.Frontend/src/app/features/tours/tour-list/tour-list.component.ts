@@ -17,6 +17,8 @@ export class TourListComponent implements OnInit {
     @Output() tourSelected = new EventEmitter<Tour>();
     @Output() showForm = new EventEmitter<void>();
 
+    selectedTourId: number | null = null;
+
     constructor(private tourService: TourService){}
 
     ngOnInit(): void {
@@ -25,11 +27,13 @@ export class TourListComponent implements OnInit {
 
     //select tour for detal view
     selectTour(tour: Tour) {
+      this.selectedTourId = tour.id;
       this.tourSelected.emit(tour);
       console.log('Tour ausgewählt:', tour);
     }
 
     onShowForm() {
+      this.selectedTourId = null;
       this.showForm.emit();
     }
 }

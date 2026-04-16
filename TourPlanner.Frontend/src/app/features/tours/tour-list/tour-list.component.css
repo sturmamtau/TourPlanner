@@ -1,67 +1,94 @@
-
-
-
-
-/* container der alle items enthält*/
+/* Der Container nutzt die volle verfügbare Höhe */
 .tour-list-container {
     display: flex;
-    height: 100vh;
-    background-color: #f4f4f4; /* Optional: Leichter Hintergrund für den Rest der Seite */
-}
-
-/*eine tour in der liste*/
-.tour-list{
-    border: 2px solid rgb(50, 50, 50);
-    width: 250px;
-    padding: 20px;
-    box-sizing: border-box;
-    display:flex;
     flex-direction: column;
+    height: 100%;
+    background-color: #ffffff; /* Reinweiß für einen cleanen Look */
+    border-right: 1px solid var(--color-border-tertiary);
 }
 
-.tour-item {
-    margin-bottom: 0px;
+.tour-heading {
+    font-size: 14px;
+    font-weight: 700;
+    padding: 20px 15px 10px 15px;
+    margin: 0;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Button Bereich fixiert oben */
+.button-container {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--color-border-tertiary);
+}
+
+.add-tour-button {
+    background: #f0faf7;
+    border: 1px dashed #0F6E56;
+    border-radius: 6px;
     padding: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0F6E56;
     cursor: pointer;
-    transition: background 0.2s;
-    color: rgb(50, 50, 50)
-}
-
-.tour-item:hover{
-    background-color: rgb(150, 150, 150);
-    color:black;
-}
-/*name einer tour*/
-.tour-name{
-    font-size: 22px;
-}
-
-/* BUTTON ZUM TOUR HINZUFÜGEN */
-
-.add-tour-button{
-    background: #d1f5e9;
-    border: none;
-    padding: 10px;
-    font-size: 20px;
-    padding-left: 10px;
-    color: rgb(50, 50, 50);
-    cursor: pointer;
-    text-align: left;
+    text-align: center;
     width: 100%;
+    transition: all 0.2s ease;
 }
 
 .add-tour-button:hover {
-    background-color: rgb(150, 150, 150); /* Farbe ändert sich beim Hover */
-    color: black;
+    background-color: #0F6E56;
+    color: white;
+    border-style: solid;
 }
 
-.tour-transport-type{
-    display: inline-block;
-    font-size: 15px; 
-    padding: 2px 6px; 
-    border-radius: 10px; 
+/* Scrollbarer Bereich für die Items */
+.tour-items-wrapper {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.tour-item {
+    padding: 15px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-border-tertiary);
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tour-item:hover {
+    background-color: #f9fafb;
+}
+
+/* Aktive Tour hervorheben */
+.tour-item.active {
+    background-color: #f0f7ff;
+    border-left: 4px solid #378ADD;
+    padding-left: 11px; /* Ausgleich für den Border */
+}
+
+.tour-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.tour-route {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+.tour-transport-type {
+    align-self: flex-start;
+    font-size: 10px; 
+    padding: 2px 8px; 
+    border-radius: 4px; 
     margin-top: 4px; 
-    font-weight: 500;
+    font-weight: 700;
+    text-transform: uppercase;
     background: #E1F5EE;
     color: #0F6E56; 
 }

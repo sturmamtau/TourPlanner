@@ -1,28 +1,32 @@
 <div class="tour-list-container">
-  <!-- Liste -->
-  <div class="tour-list">
-    <h2 class="tour-heading">Meine Touren</h2>
-    
-    <!-- Keine Touren vorhanden -->
-    <p *ngIf="tours.length === 0">Keine Touren vorhanden.</p>
-    
-    <div>
-      <button (click)="onShowForm()" class="add-tour-button">+ Add Tour</button>
-    </div>
-    <!-- Eine Tour pro Eintrag -->
-    <div *ngFor="let tour of tours" 
-        class="tour-item"
-        (click)="selectTour(tour)">
-      <div class="tour-name">{{tour.name}}</div>
-      <div>
-        {{tour.from}} → {{tour.to}}
-      </div>
-      <!--<div>{{tour.estimatedTime}} min</div>-->
-      <div class = "tour-transport-type">
-        {{tour.transportType}}
-      </div>
-    </div>
-
+  <h2 class="tour-heading">Meine Touren</h2>
+  
+  <div class="button-container">
+    <button (click)="onShowForm()" class="add-tour-button">
+      + Neue Tour erstellen
+    </button>
   </div>
 
+  <div class="tour-items-wrapper">
+    <div *ngIf="tours.length === 0" style="padding: 20px; color: var(--color-text-tertiary); font-style: italic; font-size: 13px;">
+      Keine Touren gefunden...
+    </div>
+    
+    <div *ngFor="let tour of tours" 
+         class="tour-item" 
+         [class.active]="selectedTourId === tour.id"
+         (click)="selectTour(tour)">
+      
+      <span class="tour-name">{{tour.name}}</span>
+      
+      <span class="tour-route">
+        {{tour.from}} <span style="color: #ccc;">→</span> {{tour.to}}
+      </span>
+      
+      <span class="tour-transport-type">
+        {{tour.transportType}}
+      </span>
+      
+    </div>
+  </div>
 </div>

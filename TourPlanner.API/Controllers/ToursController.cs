@@ -31,7 +31,7 @@ public class ToursController : ControllerBase
             return BadRequest(ModelState);
         }
         _tourMock.AddTour(tour);
-        return Created();
+        return CreatedAtAction(nameof(GetAll), new { id = tour.Id }, tour);
     }
 
     [HttpGet]
