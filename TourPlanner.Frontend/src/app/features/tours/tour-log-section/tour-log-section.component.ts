@@ -27,7 +27,7 @@ export class TourLogSectionComponent implements OnInit {
       dateTime: ['', Validators.required],
       comment: [''],
       difficulty: [Difficulty.Medium, Validators.required],
-      totalDistance: [0, [Validators.required, Validators.min(0.1)]],
+      totalDistance: [0, [Validators.required, Validators.min(0.1), Validators.max(20160)]],
       totalTime: [0, [Validators.required, Validators.min(1), Validators.max(20160)]],
       rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]]
     });

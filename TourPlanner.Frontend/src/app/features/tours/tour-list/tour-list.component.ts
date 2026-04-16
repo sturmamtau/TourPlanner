@@ -22,7 +22,7 @@ export class TourListComponent implements OnInit {
     constructor(private tourService: TourService){}
 
     ngOnInit(): void {
-      // Removed loadTours() as tours are now passed as input
+        
     }
 
     //select tour for detal view

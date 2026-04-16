@@ -25,7 +25,7 @@ export class TourFormComponent {
   transportType: TransportType.Walk,
   tourDistance: 0,
   estimatedTime: 0,
-  imagePath: "C:\Users\freil\Dropbox\FHTW\TourPlanner\TourPlanner\images\placeholder_map.png",
+  imagePath: "PLACEHOLDER_IMAGE_PATH",
   userId: 1  // später eingeloggter user
   };
 
