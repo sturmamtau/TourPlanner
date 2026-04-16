@@ -46,7 +46,7 @@ public class ToursController : ControllerBase
             tour.TourLogs = logs.Where(l => l.TourId == tour.Id).ToList();
             Console.WriteLine($"Tour {tour.Id} hat {tour.TourLogs.Count} Logs");
         }
-
+        
         return Ok(tours);
     }
 

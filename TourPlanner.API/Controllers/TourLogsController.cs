@@ -13,7 +13,7 @@ public class TourLogsController : ControllerBase
     public TourLogsController(TourLogMock TourLogMock) { 
         _tourLogMock = TourLogMock;
     }
-
+    
     [HttpGet]
     public IActionResult GetAll()
     {
