@@ -65,7 +65,7 @@ public class TourMock : ITourRepository
     {
         return Tours;
     }
-    //Tour GetTourById(int id);
+
     public void AddTour(Tour tour)
     {
         Tours.Add(tour);
@@ -96,4 +96,11 @@ public class TourMock : ITourRepository
             TourToUpdate.UserId = tour.UserId;
         }
     }
+
+    public Tour? GetTour(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+
 }

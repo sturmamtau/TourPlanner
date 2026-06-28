@@ -95,4 +95,6 @@ public class TourLogMock : ITourLogRepository
             tourLogToUpdate.TourId = tourLog.TourId;
         }
     }
+
+    
 }

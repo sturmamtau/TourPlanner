@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using TourPlanner.BL;
 using TourPlanner.DAL;
+using TourPlanner.DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +16,14 @@ builder.Services.AddControllers()
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// db connection
 builder.Services.AddDbContext<TourPlannerContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// add to autmatically handle dependency injection
+builder.Services.AddScoped<ITourRepository, TourRepository>();
+builder.Services.AddScoped<ITourService, TourService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>

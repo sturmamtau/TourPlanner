@@ -16,4 +16,6 @@ public interface ITourRepository
     public void DeleteTour(int id); 
 
     public void UpdateTour(Tour tour);
+
+    public Tour? GetTour(int id);
 }
