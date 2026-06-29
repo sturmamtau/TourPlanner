@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: tourplanner-db
+    environment:
+      POSTGRES_DB: tourplanner
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pwfpgsql123
+    ports:
+      - "5433:5432"
+    volumes:
+      - tourplanner-data:/var/lib/postgresql/data
+
+volumes:
+  tourplanner-data:

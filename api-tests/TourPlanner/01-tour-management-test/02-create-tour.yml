@@ -10,10 +10,10 @@ http:
     type: json
     data: |-
       {
-        "Name": "Tour5",
-        "Description": "Description5",
-        "From": "From5",
-        "To": "To5",
+        "Name": "firsttour",
+        "Description": "first tour in docker",
+        "From": "yay",
+        "To": "To",
         "TransportType": "Walk"
       }
   auth: inherit

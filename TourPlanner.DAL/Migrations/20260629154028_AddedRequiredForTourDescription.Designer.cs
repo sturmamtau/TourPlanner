@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TourPlanner.DAL;
@@ -11,9 +12,11 @@ using TourPlanner.DAL;
 namespace TourPlanner.DAL.Migrations
 {
     [DbContext(typeof(TourPlannerContext))]
-    partial class TourPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20260629154028_AddedRequiredForTourDescription")]
+    partial class AddedRequiredForTourDescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
