@@ -96,8 +96,10 @@ public class TourService : ITourService
         var tour = _tourRepo.GetTour(id);
         if (tour == null)
         {
+            Console.WriteLine("Tour not found");
             throw new KeyNotFoundException($"Tour with id {id} not found");
         }
+        Console.WriteLine("Tour found");
         return MapToGetTourDTO(tour);
     }
 

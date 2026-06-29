@@ -46,8 +46,7 @@ public class ToursController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<GetTourDTO> GetById(int id)
     {
-        var tour = _tourService.GetTourById(id);
-        return Ok(tour);
+        return Ok(_tourService.GetTourById(id));
     }
     
     [HttpDelete("{id}")]
