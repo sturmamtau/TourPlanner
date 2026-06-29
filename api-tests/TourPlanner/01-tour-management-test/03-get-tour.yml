@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/tapi/tours/1"
+  url: "{{baseUrl}}/tapi/tours/8"
   auth: inherit
 
 settings:

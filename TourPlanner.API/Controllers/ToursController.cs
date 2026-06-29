@@ -24,14 +24,18 @@ public class ToursController : ControllerBase
     // Speichert eine neue Tour, die aus dem Angular-Formular kommt
     
     [HttpPost]
-    public ActionResult Create([FromBody] Tour tour)
+    public ActionResult Create([FromBody] CreateTourDTO tour)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        _tourService.AddTour(tour);
-        return Created();
+
+        // Add the new tour using the service
+        GetTourDTO newTour = _tourService.AddTour(tour);
+        
+        //return new id and tour object (frontend should push this into tour list)
+        return CreatedAtAction(nameof(GetById), new { id = newTour.Id }, newTour);  
     }
     [HttpGet]
     public ActionResult<List<Tour>> GetAll()
@@ -40,12 +44,12 @@ public class ToursController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<TourDTO> GetById(int id)
+    public ActionResult<GetTourDTO> GetById(int id)
     {
         var tour = _tourService.GetTourById(id);
         return Ok(tour);
     }
-    /*
+    
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
@@ -53,20 +57,14 @@ public class ToursController : ControllerBase
         return Ok();
     }
 
-
     [HttpPut("{id}")]
-    public ActionResult Update(int id, [FromBody] Tour tour)
+    public ActionResult Update(int id, [FromBody] CreateTourDTO tour)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        if (id != tour.Id)
-        {
-            return BadRequest();
-        }
-        _tourService.UpdateTour(tour);
-        return Ok();
+        GetTourDTO updatedTour = _tourService.UpdateTour(id, tour);
+        return Ok(updatedTour);
     }
-    */
 }

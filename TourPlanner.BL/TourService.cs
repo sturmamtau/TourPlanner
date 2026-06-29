@@ -17,11 +17,11 @@ public class TourService : ITourService
         _tourRepo = tourRepo;
     }
 
-    public List<TourDTO> GetAllTours()
+    public List<GetTourDTO> GetAllTours()
     {
         var tours = _tourRepo.GetAllTours();
 
-        return tours.Select(tour => new TourDTO  
+        return tours.Select(tour => new GetTourDTO  
         {
             Id = tour.Id,
             Name = tour.Name,
@@ -37,29 +37,73 @@ public class TourService : ITourService
         }).ToList();
     }
 
-    public TourDTO AddTour (TourDTO tour)
+    public GetTourDTO AddTour(CreateTourDTO tourDTO)
     {
-
+        var tour = new Tour
+        {
+            Name = tourDTO.Name,
+            Description = tourDTO.Description,
+            From = tourDTO.From,
+            To = tourDTO.To,
+            TransportType = Enum.Parse<TransportType>(tourDTO.TransportType),
+            TourDistance = 0, // This will be calculated later
+            EstimatedTime = 0, // This will be calculated later
+            ImagePath = "placeholder", // This will be set later
+            UserId = 1 // This should be set to the currently logged-in user's ID
+        };
+        var addedTour = _tourRepo.AddTour(tour);
+        return MapToGetTourDTO(addedTour);
     }
-
     public void DeleteTour(int id)
     {
-        throw new NotImplementedException();
+        var tour = _tourRepo.GetTour(id);
+        if (tour != null)
+        {
+            _tourRepo.DeleteTour(tour);
+        }
+        else
+        {
+            throw new KeyNotFoundException($"Tour with id {id} not found");
+        }
     }
 
-    public TourDTO UpdateTour(TourDTO tour)
+    public GetTourDTO UpdateTour(int id, CreateTourDTO updatedtour)
     {
-        throw new NotImplementedException();
+        var tourToUpdate = _tourRepo.GetTour(id);
+        if (tourToUpdate != null)
+        {
+            tourToUpdate.Name = updatedtour.Name;
+            tourToUpdate.Description = updatedtour.Description;
+            tourToUpdate.From = updatedtour.From;
+            tourToUpdate.To = updatedtour.To;
+            tourToUpdate.TransportType = Enum.Parse<TransportType>(updatedtour.TransportType);
+            tourToUpdate.TourDistance = 0; // This will be calculated later
+            tourToUpdate.EstimatedTime = 0; // This will be calculated later
+            tourToUpdate.ImagePath = "placeholder"; // This will be set later
+            tourToUpdate.UserId = 1; // This should be set to the currently logged-in user's ID - not really necessary here
+            _tourRepo.UpdateTour(tourToUpdate);
+            return MapToGetTourDTO(tourToUpdate);
+        }
+        else
+        {
+            throw new KeyNotFoundException($"Tour with id {id} not found");
+        }
+
     }
 
-    public TourDTO GetTourById(int id)
+    public GetTourDTO GetTourById(int id)
     {
         var tour = _tourRepo.GetTour(id);
         if (tour == null)
         {
-            throw new Exception($"Tour with id {id} not found");
+            throw new KeyNotFoundException($"Tour with id {id} not found");
         }
-        return new TourDTO
+        return MapToGetTourDTO(tour);
+    }
+
+    private GetTourDTO MapToGetTourDTO(Tour tour)
+    {
+        return new GetTourDTO
         {
             Id = tour.Id,
             Name = tour.Name,

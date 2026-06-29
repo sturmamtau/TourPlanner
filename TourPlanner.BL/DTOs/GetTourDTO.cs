@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TourPlanner.BL.DTOs;
 
-public class TourDTO
+public class GetTourDTO
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -17,6 +17,8 @@ public class TourDTO
     public double TourDistance { get; set; }
     public int EstimatedTime { get; set; }
 
+    public int Popularity { get; set; }
+    public int ChildFriendliness { get; set; }
     // url for tourmap, ready for frontend
     public string? ImageUrl { get; set; }
 }

@@ -11,9 +11,9 @@ namespace TourPlanner.BL;
 public interface ITourService
 {
     //evtl andere DTOS nötig
-    List<TourDTO> GetAllTours();
-    TourDTO GetTourById(int id);
-    TourDTO UpdateTour(TourDTO tour);
-    TourDTO AddTour(TourDTO tour); 
+    List<GetTourDTO> GetAllTours();
+    GetTourDTO GetTourById(int id);
+    GetTourDTO UpdateTour(int id, CreateTourDTO tour);
+    GetTourDTO AddTour(CreateTourDTO tour); 
     void DeleteTour(int id);
 }

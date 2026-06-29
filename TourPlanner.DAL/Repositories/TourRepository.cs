@@ -28,18 +28,25 @@ public class TourRepository : ITourRepository
         return _context.Tours.Find(id);
     }
 
-    public void AddTour(Tour tour)
+    public Tour AddTour(Tour tour)
     {
-        
+        // prepare changes
+        _context.Tours.Add(tour);
+        // update database
+        _context.SaveChanges();
+        // Id is added automatically (returning id and tour object is updated)
+        return tour;
     }
 
-    public void DeleteTour(int id)
+    public void DeleteTour(Tour tour)
     {
-        // Implementation here  
+        _context.Tours.Remove(tour);
+        _context.SaveChanges();
     }
 
     public void UpdateTour(Tour tour)
     {
-        // Implementation here  
+        _context.Tours.Update(tour);
+        _context.SaveChanges();
     }
 }

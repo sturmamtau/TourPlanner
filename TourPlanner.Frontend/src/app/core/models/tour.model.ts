@@ -7,38 +7,18 @@ export enum TransportType {
   Vacation = 'Vacation'
 }
 
-// for list
-export interface TourList {
+export interface Tour {
   id: number;
-  name: string;
-  from: string;
-  to: string;
-  transportType: string;
-}
-
-// for details
-export interface TourDetails {
-  id: number;
-  name: string;
-  description: string;
-  from: string;
-  to: string;
-  transportType: string;
-  tourDistance: number;
-  estimatedTime: number;
-  imageUrl?: string;
-  popularity: number;
-  isChildFriendly: boolean;
-  tourLogs: TourLog[];
-}
-
-// for tour form
-export interface CreateTour {
   name: string;
   description?: string;
   from: string;
   to: string;
-  transportType: string;
+  transportType: TransportType;
   tourDistance: number;
   estimatedTime: number;
+  imagePath?: string;
+  popularity: number;
+  isChildFriendly: boolean;
+  userId: number;
+  tourLogs?: TourLog[];
 }

@@ -10,16 +10,11 @@ http:
     type: json
     data: |-
       {
-        "Id": 4,
-        "Name": "Tour4",
-        "Description": "Description4",
-        "From": "From4",
-        "To": "To4",
-        "TransportType": "Walk",
-        "TourDistance": 44,
-        "EstimatedTime": 67,
-        "ImagePath": "path/to/image4.jpg",
-        "UserId": 1
+        "Name": "Tour5",
+        "Description": "Description5",
+        "From": "From5",
+        "To": "To5",
+        "TransportType": "Walk"
       }
   auth: inherit
 

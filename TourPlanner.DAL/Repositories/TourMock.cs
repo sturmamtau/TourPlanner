@@ -7,7 +7,7 @@ using TourPlanner.Models;
 
 namespace TourPlanner.DAL.Repositories;
 
-public class TourMock : ITourRepository
+public class TourMock
 {
     private static readonly List<Tour> Tours = new List<Tour>();
     public TourMock()
