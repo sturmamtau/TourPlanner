@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TourPlanner.DAL;
 using TourPlanner.Models;
+using TourPlanner.BL;
 using Microsoft.EntityFrameworkCore;
 using TourPlanner.DAL.Repositories;
+using TourPlanner.BL.DTOs;
 
 namespace TourPlanner.API.Controllers;
 
@@ -12,63 +13,58 @@ namespace TourPlanner.API.Controllers;
 public class ToursController : ControllerBase
 {
     //private readonly TourPlannerContext _context;
-    private readonly TourMock _tourMock;
-    private readonly TourLogMock _tourLogMock;
+    private readonly ITourService _tourService;
 
-    public ToursController(TourPlannerContext context, TourMock tourMock, TourLogMock tourLogMock)
+    public ToursController(ITourService tourService)
     {
         //_context = context;
-        _tourMock = tourMock;
-        _tourLogMock = tourLogMock;
+        _tourService = tourService;
     }
 
     // Speichert eine neue Tour, die aus dem Angular-Formular kommt
+    
     [HttpPost]
-    public ActionResult Create([FromBody] Tour tour)
+    public ActionResult Create([FromBody] CreateTourDTO tour)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        _tourMock.AddTour(tour);
-        return CreatedAtAction(nameof(GetAll), new { id = tour.Id }, tour);
-    }
 
+        // Add the new tour using the service
+        GetTourDTO newTour = _tourService.AddTour(tour);
+        
+        //return new id and tour object (frontend should push this into tour list)
+        return CreatedAtAction(nameof(GetById), new { id = newTour.Id }, newTour);  
+    }
     [HttpGet]
     public ActionResult<List<Tour>> GetAll()
     {
-        var tours = _tourMock.GetAllTours();
-        var logs = _tourLogMock.GetAllTourLogs();
-
-        // Jede Tour bekommt ihre passenden Logs zugewiesen
-        foreach (var tour in tours)
-        {
-            tour.TourLogs = logs.Where(l => l.TourId == tour.Id).ToList();
-            Console.WriteLine($"Tour {tour.Id} hat {tour.TourLogs.Count} Logs");
-        }
-        
-        return Ok(tours);
+        return Ok(_tourService.GetAllTours());
     }
 
+    [HttpGet("{id}")]
+    public ActionResult<GetTourDTO> GetById(int id)
+    {
+        var tour = _tourService.GetTourById(id);
+        return Ok(tour);
+    }
+    
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
-        _tourMock.DeleteTour(id);
+        _tourService.DeleteTour(id);
         return Ok();
     }
 
     [HttpPut("{id}")]
-    public ActionResult Update(int id, [FromBody] Tour tour)
+    public ActionResult Update(int id, [FromBody] CreateTourDTO tour)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        if (id != tour.Id)
-        {
-            return BadRequest();
-        }
-        _tourMock.UpdateTour(tour);
-        return Ok();
+        GetTourDTO updatedTour = _tourService.UpdateTour(id, tour);
+        return Ok(updatedTour);
     }
 }

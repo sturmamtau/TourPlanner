@@ -7,7 +7,7 @@ using TourPlanner.Models;
 
 namespace TourPlanner.DAL.Repositories;
 
-public class TourMock : ITourRepository
+public class TourMock
 {
     private static readonly List<Tour> Tours = new List<Tour>();
     public TourMock()
@@ -65,7 +65,7 @@ public class TourMock : ITourRepository
     {
         return Tours;
     }
-    //Tour GetTourById(int id);
+
     public void AddTour(Tour tour)
     {
         int nextId = Tours.Any() ? Tours.Max(t => t.Id) + 1 : 1;
@@ -106,4 +106,11 @@ public class TourMock : ITourRepository
             TourToUpdate.UserId = tour.UserId;
         }
     }
+
+    public Tour? GetTour(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+
 }

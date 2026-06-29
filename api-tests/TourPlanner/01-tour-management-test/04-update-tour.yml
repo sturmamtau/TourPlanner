@@ -5,21 +5,16 @@ info:
 
 http:
   method: PUT
-  url: "{{baseUrl}}/api/tours/3"
+  url: "{{baseUrl}}/api/tours/8"
   body:
     type: json
     data: |-
       {
-        "id": 3,
-        "name": "Tour3-new",
-        "description": "Description3-new",
-        "from": "From3-new",
-        "to": "To3-new",
-        "transportType": "Bike",
-        "tourDistance": 20,
-        "estimatedTime": 40,
-        "imagePath": "path/to/image3.jpg-new",
-        "userId": 1
+        "name": "Name-new",
+        "description": "Des-new",
+        "from": "From-new",
+        "to": "To-new",
+        "transportType": "Bike"
       }
   auth: inherit
 

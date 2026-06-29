@@ -8,15 +8,17 @@ export enum TransportType {
 }
 
 export interface Tour {
-    id: number;
-    name: string;
-    description?: string;
-    from: string;
-    to: string;
-    transportType: TransportType;
-    tourDistance: number;
-    estimatedTime: number;
-    imagePath?: string;
-    userId: number;
-    tourLogs?: TourLog[];
+  id: number;
+  name: string;
+  description?: string;
+  from: string;
+  to: string;
+  transportType: TransportType;
+  tourDistance: number;
+  estimatedTime: number;
+  imagePath?: string;
+  popularity: number;
+  isChildFriendly: boolean;
+  userId: number;
+  tourLogs?: TourLog[];
 }

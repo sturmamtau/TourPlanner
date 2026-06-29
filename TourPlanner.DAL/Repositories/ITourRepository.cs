@@ -11,9 +11,11 @@ public interface ITourRepository
 {
     List<Tour> GetAllTours();
     //Tour GetTourById(int id);
-    public void AddTour(Tour tour);
+    public Tour AddTour(Tour tour);
 
-    public void DeleteTour(int id); 
+    public void DeleteTour(Tour id); 
 
     public void UpdateTour(Tour tour);
+
+    public Tour? GetTour(int id);
 }
