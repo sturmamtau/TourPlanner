@@ -16,9 +16,9 @@ export interface Tour {
   transportType: TransportType;
   tourDistance: number;
   estimatedTime: number;
-  imagePath?: string;
+  imageUrl?: string;
   popularity: number;
-  isChildFriendly: boolean;
+  childfriendliness: number;
   userId: number;
   tourLogs?: TourLog[];
 }

@@ -63,83 +63,65 @@ export class TourPageComponent implements OnInit {
     }
 
 
-    formSubmit(formData: Tour){
-        const exists = this.tours.some(t => Number(t.id) === Number(formData.id));
-        if(exists){
-            this.updateTour(formData);
-        }
-        else{
-          this.addTour(formData)
+    formSubmit(formData: any){
+        const createTourDto = {
+            name: formData.name,
+            description: formData.description || '',
+            from: formData.from,
+            to: formData.to,
+            transportType: formData.transportType
+        };
+
+        if (formData.id && formData.id > 0) {
+            this.updateTour(formData.id, createTourDto);
+        } else {
+            this.addTour(createTourDto);
         }
     }
 
     //add new tour via tour service
-    addTour(formData: Tour): void
-    {
-      console.log("add new tour")
-      this.tourService.createTour(formData).subscribe({
-        next: () => {
+    addTour(tourDto: any): void {
+      console.log("Füge neue Tour hinzu...", tourDto);
+      this.tourService.createTour(tourDto).subscribe({
+        next: (newTour) => {
             this.hideForm();
-            this.loadTours();
-        }
-      })
+            this.loadTours(); // Lädt die Liste neu, damit die Backend-ID verfügbar ist
+        },
+        error: (err) => console.error("Fehler beim Erstellen der Tour:", err)
+      });
     }
 
-    deleteTour(): void
-    {
-      if(this.selectedTour){
-        this.tourService.deleteTour(this.selectedTour.id).subscribe({
-          next: () => {
-              this.selectedTour = null; // Reset selected tour after deletion
-              this.loadTours();
-          }
-        })
-      }
-    }
-    //nur show form statt uodate
-
-    /*updateTour(formData: Tour): void
-    {
-        console.log("update tour")
-        this.tourService.updateTour(formData).subscribe({
-        next: () => {
-            this.hideForm();
-            this.loadTours();
-            //eig tourdetails neu laden
-            this.selectedTour = null;
-        }
-      })
-    }
-    */
-   updateTour(formData: Tour): void {
-      console.log("update tour");
-      this.tourService.updateTour(formData).subscribe({
+    updateTour(id: number, tourDto: any): void {
+      console.log("Aktualisiere Tour...", id, tourDto);
+      
+      // ACHTUNG: Dein TourService muss updateTour(id, dto) unterstützen!
+      this.tourService.updateTour(id, tourDto).subscribe({
         next: () => {
           this.hideForm();
-      
-      // 1. Lade alle Touren neu
-        this.tourService.getAllTours().subscribe({
-          next: (data) => {
-            this.tours = data;
-            
-            // 2. Finde die aktuell ausgewählte Tour in der neuen Liste wieder
-            const updatedTour = this.tours.find(t => t.id === formData.id);
-            if (updatedTour) {
-              this.selectedTour = updatedTour; // Referenz aktualisieren
-            }
-            this.isLoading = false;
-          }
+
+          this.refreshSelectedTour(); 
+        },
+        error: (err) => console.error("Fehler beim Updaten der Tour:", err)
+      });
+    }
+    
+   deleteTour(): void {
+      if (this.selectedTour) {
+        this.tourService.deleteTour(this.selectedTour.id).subscribe({
+          next: () => {
+              this.selectedTour = null; 
+              this.loadTours();
+          },
+          error: (err) => console.error("Fehler beim Löschen:", err)
         });
       }
-    });
-  }
+    }
 
   refreshSelectedTour(): void {
-    this.isLoading = true;
+      this.isLoading = true;
       this.tourService.getAllTours().subscribe({
         next: (data) => {
           this.tours = data;
-      // WICHTIG: Die Referenz der ausgewählten Tour in der neuen Liste finden
           if (this.selectedTour) {
             const found = this.tours.find(t => t.id === this.selectedTour?.id);
             this.selectedTour = found ? found : null;
@@ -151,5 +133,5 @@ export class TourPageComponent implements OnInit {
           this.isLoading = false;
         }
       });
-  }
+    }
 }
