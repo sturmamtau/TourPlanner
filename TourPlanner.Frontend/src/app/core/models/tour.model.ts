@@ -20,5 +20,5 @@ export interface Tour {
   popularity: number;
   childfriendliness: number;
   userId: number;
-  tourLogs?: TourLog[];
+  tourLogs: TourLog[];
 }

@@ -21,4 +21,5 @@ public class GetTourDTO
     public int ChildFriendliness { get; set; }
     // url for tourmap, ready for frontend
     public string? ImageUrl { get; set; }
+    public List<TourLogDTO> TourLogs { get; set; } = new List<TourLogDTO>();
 }

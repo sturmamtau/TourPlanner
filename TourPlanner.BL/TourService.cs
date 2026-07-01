@@ -21,20 +21,7 @@ public class TourService : ITourService
     {
         var tours = _tourRepo.GetAllTours();
 
-        return tours.Select(tour => new GetTourDTO  
-        {
-            Id = tour.Id,
-            Name = tour.Name,
-            Description = tour.Description,
-            From = tour.From,
-            To = tour.To,
-            TransportType = tour.TransportType.ToString(),
-            TourDistance = tour.TourDistance,
-            EstimatedTime = tour.EstimatedTime,
-            ImageUrl = tour.ImagePath != null
-            ? $"/images/{Path.GetFileName(tour.ImagePath)}"
-            : null
-        }).ToList();
+        return tours.Select(tour => MapToGetTourDTO(tour)).ToList();
     }
 
     public GetTourDTO AddTour(CreateTourDTO tourDTO)
@@ -117,7 +104,18 @@ public class TourService : ITourService
             EstimatedTime = tour.EstimatedTime,
             ImageUrl = tour.ImagePath != null
                 ? $"/images/{Path.GetFileName(tour.ImagePath)}"
-                : null
+                : null,
+            
+            TourLogs = tour.TourLogs?.Select(log => new TourLogDTO
+            {
+                Id = log.Id,
+                DateTime = log.DateTime,
+                Comment = log.Comment ?? "",
+                Difficulty = (int)log.Difficulty,
+                TotalDistance = log.TotalDistance,
+                TotalTime = log.TotalTime,
+                Rating = log.Rating
+            }).ToList() ?? new List<TourLogDTO>()
         };
     }
 

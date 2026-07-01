@@ -24,6 +24,9 @@ builder.Services.AddDbContext<TourPlannerContext>(options =>
 builder.Services.AddScoped<ITourRepository, TourRepository>();
 builder.Services.AddScoped<ITourService, TourService>();
 
+builder.Services.AddScoped<ITourLogRepository, TourLogRepository>();
+builder.Services.AddScoped<ITourLogService, TourLogService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
@@ -33,8 +36,7 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
-builder.Services.AddSingleton<TourMock>();
-builder.Services.AddSingleton<TourLogMock>();
+
 var app = builder.Build();
 
 

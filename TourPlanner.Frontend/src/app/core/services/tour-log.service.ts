@@ -10,12 +10,12 @@ export class TourLogService {
 
   constructor(private http: HttpClient) {}
 
-  createLog(log: TourLog): Observable<TourLog> {
+  createLog(log: any): Observable<TourLog> {
     return this.http.post<TourLog>(this.apiUrl, log);
   }
 
-  updateLog(log: TourLog): Observable<TourLog> {
-    return this.http.put<TourLog>(`${this.apiUrl}/${log.id}`, log);
+  updateLog(log: TourLog): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${log.id}`, log);
   }
 
   deleteLog(id: number): Observable<void> {

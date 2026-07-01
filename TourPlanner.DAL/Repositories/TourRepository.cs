@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using TourPlanner.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace TourPlanner.DAL.Repositories;
 
@@ -20,12 +21,14 @@ public class TourRepository : ITourRepository
     public List<Tour> GetAllTours()
     {
         // Implementation here  
-        return _context.Tours.ToList();
+        return _context.Tours.Include(t => t.TourLogs).ToList();
     }
 
     public Tour? GetTour(int id)
     {
-        return _context.Tours.Find(id);
+        return _context.Tours
+        .Include(t => t.TourLogs) // Lädt die verknüpften Logs mit
+        .FirstOrDefault(t => t.Id == id); // Sucht die Tour anhand der ID
     }
 
     public Tour AddTour(Tour tour)

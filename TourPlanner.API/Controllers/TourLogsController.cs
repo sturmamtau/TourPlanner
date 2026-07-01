@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using TourPlanner.DAL.Repositories;
-using TourPlanner.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using TourPlanner.BL;
+using TourPlanner.BL.DTOs;
 
 namespace TourPlanner.API.Controllers;
 
@@ -9,47 +9,61 @@ namespace TourPlanner.API.Controllers;
 [ApiController]
 public class TourLogsController : ControllerBase
 {
-    public TourLogMock _tourLogMock;
-    public TourLogsController(TourLogMock TourLogMock) { 
-        _tourLogMock = TourLogMock;
+    private readonly ITourLogService _logService;
+
+    public TourLogsController(ITourLogService logService) 
+    { 
+        _logService = logService;
     }
     
-    [HttpGet]
-    public IActionResult GetAll()
+    [HttpGet("tour/{tourId}")]
+    public ActionResult<List<TourLogDTO>> GetLogsForTour(int tourId)
     {
-        return Ok(_tourLogMock.GetAllTourLogs());
+        return Ok(_logService.GetLogsForTour(tourId));
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] TourLog tourLog)
+    public IActionResult Create([FromBody] CreateTourLogDTO tourLogDto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        _tourLogMock.AddTourLog(tourLog);
-        return Created("", tourLog);
+        
+        var createdLog = _logService.AddTourLog(tourLogDto);
+        return Created("", createdLog);
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] TourLog tourLog)
+    public IActionResult Update(int id, [FromBody] CreateTourLogDTO tourLogDto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        if (id != tourLog.Id)
+        
+        try
         {
-            return BadRequest();
+            _logService.UpdateTourLog(id, tourLogDto);
+            return Ok();
         }
-        _tourLogMock.UpdateTourLog(tourLog);
-        return Ok();
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
     }
 
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
-        _tourLogMock.DeleteTourLog(id);
-        return Ok();
+        try
+        {
+            _logService.DeleteTourLog(id);
+            return Ok();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
     }
 }

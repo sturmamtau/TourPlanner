@@ -19,10 +19,15 @@ export class TourLogSectionComponent implements OnInit {
   logForm: FormGroup;
   isEditing = false;
   editingLogId: number | null = null;
-  difficulties = Object.values(Difficulty).filter(value => typeof value === 'string');
+  
+  // NEU: Sauberes Array für das Dropdown (Text für den User, Zahl fürs Backend)
+  difficultyOptions = [
+    { label: 'Leicht', value: Difficulty.Easy },
+    { label: 'Mittel', value: Difficulty.Medium },
+    { label: 'Schwer', value: Difficulty.Hard }
+  ];
 
   constructor(private fb: FormBuilder, private tourLogService: TourLogService) {
-    // Validierung: Datum, Distanz, Zeit und Rating sind Pflicht
     this.logForm = this.fb.group({
       dateTime: ['', Validators.required],
       comment: [''],
@@ -54,7 +59,15 @@ export class TourLogSectionComponent implements OnInit {
   editLog(log: TourLog): void {
     this.isEditing = true;
     this.editingLogId = log.id;
-    this.logForm.patchValue(log);
+    
+    // NEU: Wir schneiden das Datum auf 16 Zeichen ab (YYYY-MM-DDThh:mm), 
+    // damit das HTML-Input es beim Editieren anzeigen kann.
+    const formattedDate = log.dateTime ? log.dateTime.substring(0, 16) : '';
+    
+    this.logForm.patchValue({
+      ...log,
+      dateTime: formattedDate
+    });
   }
 
   deleteLog(id: number): void {
@@ -66,8 +79,8 @@ export class TourLogSectionComponent implements OnInit {
   private onSuccess(): void {
     this.isEditing = false;
     this.editingLogId = null;
-    this.logForm.reset({ difficulty: Difficulty.Medium, rating: 5 });
-    this.logChanged.emit(); // Parent informieren, damit Daten neu geladen werden
+    this.logForm.reset({ difficulty: Difficulty.Medium, rating: 5, totalDistance: 0, totalTime: 0 });
+    this.logChanged.emit(); 
   }
 
   cancel(): void {
