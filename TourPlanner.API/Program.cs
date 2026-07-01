@@ -6,6 +6,16 @@ using TourPlanner.DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularCorsPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // URL Angular Frontends
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers()
@@ -46,11 +56,15 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
+app.UseCors(policy => policy
+    .WithOrigins("http://localhost:4200")
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAngular");
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

@@ -23,20 +23,7 @@ public class TourService : ITourService
     {
         var tours = _tourRepo.GetAllTours();
 
-        return tours.Select(tour => new GetTourDTO  
-        {
-            Id = tour.Id,
-            Name = tour.Name,
-            Description = tour.Description,
-            From = tour.From,
-            To = tour.To,
-            TransportType = tour.TransportType.ToString(),
-            TourDistance = tour.TourDistance,
-            EstimatedTime = tour.EstimatedTime,
-            ImageUrl = tour.ImagePath != null
-            ? $"/images/{Path.GetFileName(tour.ImagePath)}"
-            : null
-        }).ToList();
+        return tours.Select(tour => MapToGetTourDTO(tour)).ToList();
     }
 
     public async Task<GetTourDTO> AddTour(CreateTourDTO tourDTO)
@@ -57,7 +44,7 @@ public class TourService : ITourService
             UserId = 1 // This should be set to the currently logged-in user's ID
         };
         var addedTour = _tourRepo.AddTour(tour);
-        return MapToGetTourDTO(addedTour);
+        return MapToGetTourDTO(addedTour, route.GeoJson);
     }
     public void DeleteTour(int id)
     {
@@ -84,7 +71,7 @@ public class TourService : ITourService
             tourToUpdate.TransportType = Enum.Parse<TransportType>(updatedtour.TransportType);
             tourToUpdate.TourDistance = 0; // This will be calculated later
             tourToUpdate.EstimatedTime = 0; // This will be calculated later
-            tourToUpdate.ImagePath = "placeholder"; // This will be set later
+            tourToUpdate.ImagePath = ""; // This will be set later
             tourToUpdate.UserId = 1; // This should be set to the currently logged-in user's ID - not really necessary here
             _tourRepo.UpdateTour(tourToUpdate);
             return MapToGetTourDTO(tourToUpdate);
@@ -94,6 +81,19 @@ public class TourService : ITourService
             throw new KeyNotFoundException($"Tour with id {id} not found");
         }
 
+    }
+
+    public GetTourDTO UpdateTourImage(int id, string imagePath)
+    {
+        var tourToUpdate = _tourRepo.GetTour(id);
+        if (tourToUpdate != null)
+        {
+            tourToUpdate.ImagePath = imagePath;
+            _tourRepo.UpdateTour(tourToUpdate);
+            return MapToGetTourDTO(tourToUpdate);
+        }
+
+        throw new KeyNotFoundException($"Tour with id {id} not found");
     }
 
     public GetTourDTO GetTourById(int id)
@@ -108,7 +108,7 @@ public class TourService : ITourService
         return MapToGetTourDTO(tour);
     }
 
-    private GetTourDTO MapToGetTourDTO(Tour tour)
+    private GetTourDTO MapToGetTourDTO(Tour tour, string? routeGeoJson = null)
     {
         return new GetTourDTO
         {
@@ -120,6 +120,7 @@ public class TourService : ITourService
             TransportType = tour.TransportType.ToString(),
             TourDistance = tour.TourDistance,
             EstimatedTime = tour.EstimatedTime,
+            RouteGeoJson = routeGeoJson,
             ImageUrl = tour.ImagePath != null
                 ? $"/images/{Path.GetFileName(tour.ImagePath)}"
                 : null
