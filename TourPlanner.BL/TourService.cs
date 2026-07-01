@@ -12,9 +12,11 @@ namespace TourPlanner.BL;
 public class TourService : ITourService
 {
     private readonly ITourRepository _tourRepo;
-    public TourService(ITourRepository tourRepo)
+    private readonly IRouteService _routeService;
+    public TourService(ITourRepository tourRepo, IRouteService routeService)
     {
         _tourRepo = tourRepo;
+        _routeService = routeService;
     }
 
     public List<GetTourDTO> GetAllTours()
@@ -37,8 +39,11 @@ public class TourService : ITourService
         }).ToList();
     }
 
-    public GetTourDTO AddTour(CreateTourDTO tourDTO)
+    public async Task<GetTourDTO> AddTour(CreateTourDTO tourDTO)
     {
+        // Open route service API Call
+        var route = await _routeService.GetRouteAsync(tourDTO.From, tourDTO.To, tourDTO.TransportType);
+
         var tour = new Tour
         {
             Name = tourDTO.Name,
@@ -46,8 +51,8 @@ public class TourService : ITourService
             From = tourDTO.From,
             To = tourDTO.To,
             TransportType = Enum.Parse<TransportType>(tourDTO.TransportType),
-            TourDistance = 0, // This will be calculated later
-            EstimatedTime = 0, // This will be calculated later
+            TourDistance = (int)Math.Round(route.Distance), //distance from ORS in meters rounded to int
+            EstimatedTime = (int)Math.Round(route.Duration / 60.0), // time from ORS in minutes rounded to int
             ImagePath = "placeholder", // This will be set later
             UserId = 1 // This should be set to the currently logged-in user's ID
         };

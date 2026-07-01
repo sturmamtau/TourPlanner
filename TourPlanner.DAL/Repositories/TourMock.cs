@@ -19,7 +19,7 @@ public class TourMock
             Description = "Description1",
             From = "From1",
             To = "To1",
-            TransportType = TransportType.Vacation,
+            TransportType = TransportType.Car,
             TourDistance = 100,
             EstimatedTime = 120,
             ImagePath = "path/to/image1.jpg",

@@ -23,6 +23,9 @@ builder.Services.AddDbContext<TourPlannerContext>(options =>
 // add to autmatically handle dependency injection
 builder.Services.AddScoped<ITourRepository, TourRepository>();
 builder.Services.AddScoped<ITourService, TourService>();
+builder.Services.AddSingleton<TourMock>();
+builder.Services.AddSingleton<TourLogMock>();
+builder.Services.AddHttpClient<IRouteService, RouteService>();
 
 builder.Services.AddCors(options =>
 {
@@ -33,8 +36,7 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
-builder.Services.AddSingleton<TourMock>();
-builder.Services.AddSingleton<TourLogMock>();
+
 var app = builder.Build();
 
 

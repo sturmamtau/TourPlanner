@@ -24,7 +24,7 @@ public class ToursController : ControllerBase
     // Speichert eine neue Tour, die aus dem Angular-Formular kommt
     
     [HttpPost]
-    public ActionResult Create([FromBody] CreateTourDTO tour)
+    public async Task<ActionResult> Create([FromBody] CreateTourDTO tour)
     {
         if (!ModelState.IsValid)
         {
@@ -32,7 +32,7 @@ public class ToursController : ControllerBase
         }
 
         // Add the new tour using the service
-        GetTourDTO newTour = _tourService.AddTour(tour);
+        GetTourDTO newTour = await _tourService.AddTour(tour);
         
         //return new id and tour object (frontend should push this into tour list)
         return CreatedAtAction(nameof(GetById), new { id = newTour.Id }, newTour);  
