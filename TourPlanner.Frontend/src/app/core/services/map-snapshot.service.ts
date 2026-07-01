@@ -10,40 +10,46 @@ export class MapSnapshotService {
    * Wird nur einmalig beim Erstellen einer Tour verwendet - keine Interaktivität.
    */
   async createSnapshot(geoJson: GeoJSON.GeoJsonObject): Promise<Blob> {
-    // Temporären, unsichtbaren Container erzeugen
-    const container = document.createElement('div');
-    container.style.width = '800px';
-    container.style.height = '500px';
-    container.style.position = 'absolute';
-    container.style.left = '-9999px'; // außerhalb des sichtbaren Bereichs
-    document.body.appendChild(container);
+  const container = document.createElement('div');
+  container.style.width = '800px';
+  container.style.height = '500px';
+  container.style.position = 'absolute';
+  container.style.left = '-9999px';
+  document.body.appendChild(container);
 
-    try {
-      const map = L.map(container, {
-        zoomControl: false,
-        attributionControl: false,
-      });
+  try {
+    const map = L.map(container, {
+      zoomControl: false,
+      attributionControl: false,
+      preferCanvas: true, 
+    });
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-      const routeLayer = L.geoJSON(geoJson, {
-        style: { color: '#3388ff', weight: 4 },
-      }).addTo(map);
+    const routeLayer = L.geoJSON(geoJson, {
+      style: { color: '#3388ff', weight: 4 },
+    }).addTo(map);
 
-      const bounds = routeLayer.getBounds();
-      map.fitBounds(bounds, { padding: [20, 20] });
+    const bounds = routeLayer.getBounds();
+    map.fitBounds(bounds, { padding: [20, 20] });
 
-      // Warten, bis alle Kacheln geladen sind, bevor exportiert wird
-      await this.waitForTiles(map);
+    await this.waitForTiles(map);
+    await this.waitForNextFrame(); // Canvas-Repaint abwarten
 
-      const blob = await this.exportCanvas(map);
+    const blob = await this.exportCanvas(map);
 
-      map.remove();
-      return blob;
-    } finally {
-      document.body.removeChild(container);
-    }
+    map.remove();
+    return blob;
+  } finally {
+    document.body.removeChild(container);
   }
+}
+
+private waitForNextFrame(): Promise<void> {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+  });
+}
 
   private waitForTiles(map: L.Map): Promise<void> {
     return new Promise((resolve) => {

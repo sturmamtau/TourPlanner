@@ -2,6 +2,7 @@ import { Component, Input,Output, EventEmitter } from '@angular/core';
 import { Tour } from '../../../core/models/tour.model';
 import { CommonModule, NgIf } from '@angular/common';
 import { TourLogSectionComponent } from '../tour-log-section/tour-log-section.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-tour-detail',
@@ -13,6 +14,7 @@ export class TourDetailComponent {
   @Output() deleteTourEvent = new EventEmitter();
   @Output() updateTourEvent = new EventEmitter<void>();
   private _tour!: Tour;
+  readonly backendUrl = environment.apiUrl;
 
   @Input() set tour(value: Tour) {
     this._tour = value;

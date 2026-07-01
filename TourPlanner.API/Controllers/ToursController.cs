@@ -13,7 +13,6 @@ namespace TourPlanner.API.Controllers;
 [ApiController]
 public class ToursController : ControllerBase
 {
-    //private readonly TourPlannerContext _context;
     private readonly ITourService _tourService;
     private readonly IWebHostEnvironment _environment;
 
@@ -23,8 +22,6 @@ public class ToursController : ControllerBase
         _tourService = tourService;
         _environment = environment;
     }
-
-    // Speichert eine neue Tour, die aus dem Angular-Formular kommt
     
     [HttpPost]
     public async Task<ActionResult> Create([FromBody] CreateTourDTO tour)
@@ -53,29 +50,40 @@ public class ToursController : ControllerBase
     }
 
     [HttpPost("{id}/image")]
-    public async Task<ActionResult<GetTourDTO>> UploadImage(int id, IFormFile image)
+    public async Task<ActionResult<GetTourDTO>> UploadImage(int id, IFormFile file)
     {
-        if (image == null || image.Length == 0)
+        if (file == null || file.Length == 0)
         {
             return BadRequest("No image uploaded.");
         }
 
-        var uploadsFolder = Path.Combine(_environment.WebRootPath, "images");
-        Directory.CreateDirectory(uploadsFolder);
-
-        var fileName = $"tour_{id}_{Guid.NewGuid():N}{Path.GetExtension(image.FileName)}";
-        var filePath = Path.Combine(uploadsFolder, fileName);
-
-        await using (var stream = new FileStream(filePath, FileMode.Create))
+        try
         {
-            await image.CopyToAsync(stream);
-        }
+            var rootPath = _environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var uploadsFolder = Path.Combine(rootPath, "images");
 
-        var relativePath = $"/images/{fileName}";
-        var updatedTour = _tourService.UpdateTourImage(id, relativePath);
-        return Ok(updatedTour);
+            Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = $"tour_{id}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            await using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var relativePath = $"/images/{fileName}";
+            var updatedTour = _tourService.UpdateTourImage(id, relativePath);
+
+            return Ok(updatedTour);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Speichern des Bildes: {ex.Message}");
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
-    
+
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {

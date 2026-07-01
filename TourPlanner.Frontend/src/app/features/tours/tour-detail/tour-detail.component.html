@@ -8,9 +8,13 @@
     </div>
   </div>
 
-  <div class="map-placeholder">
-    <span>🗺 Karte für {{ tour.name }} wird hier angezeigt</span>
+  <div class="map-placeholder" *ngIf="!tour.imageUrl; else tourImage">
+  <span>🗺 Karte für {{ tour.name }} wird hier angezeigt</span>
   </div>
+
+  <ng-template #tourImage>
+    <img class="tour-image" [src]="backendUrl + tour.imageUrl" [alt]="'Kartenansicht von ' + tour.name" />
+  </ng-template>
 
   <div class="attrs">
     <div class="attr-card">
