@@ -3,5 +3,5 @@
     Run,
     Bike,
     Walk,
-    Vacation
+    Car
 }

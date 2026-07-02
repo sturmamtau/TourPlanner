@@ -13,12 +13,14 @@
     *ngIf="selectedTour && !formIsShown"
     [tour]="selectedTour"
     (deleteTourEvent)="deleteTour()"
+    (editTourEvent)="startEditTour()"
     (updateTourEvent)="refreshSelectedTour()"
     class="detail-view">
   </app-tour-detail>
 
 <app-tour-form
     *ngIf="formIsShown"
+    [tourToEdit]="selectedTour"
     (formSubmitted)="formSubmit($event)"
     (formCancelled)="hideForm()">
   </app-tour-form>

@@ -6,6 +6,16 @@ using TourPlanner.DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularCorsPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // URL Angular Frontends
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers()
@@ -23,6 +33,9 @@ builder.Services.AddDbContext<TourPlannerContext>(options =>
 // add to autmatically handle dependency injection
 builder.Services.AddScoped<ITourRepository, TourRepository>();
 builder.Services.AddScoped<ITourService, TourService>();
+builder.Services.AddSingleton<TourMock>();
+builder.Services.AddSingleton<TourLogMock>();
+builder.Services.AddHttpClient<IRouteService, RouteService>();
 
 builder.Services.AddScoped<ITourLogRepository, TourLogRepository>();
 builder.Services.AddScoped<ITourLogService, TourLogService>();
@@ -46,11 +59,15 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
+app.UseCors(policy => policy
+    .WithOrigins("http://localhost:4200")
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAngular");
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

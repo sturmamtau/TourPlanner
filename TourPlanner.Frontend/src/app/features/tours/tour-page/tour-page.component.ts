@@ -6,6 +6,7 @@ import { TourFormComponent } from '../tour-form/tour-form.component';
 import { TourDetailComponent } from '../tour-detail/tour-detail.component';
 import { TourListComponent } from '../tour-list/tour-list.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
+import { MapSnapshotService } from '../../../core/services/map-snapshot.service';
 
 @Component({
   selector: 'app-tour-page',
@@ -21,7 +22,10 @@ export class TourPageComponent implements OnInit {
     selectedTour: Tour | null = null;
     
 
-    constructor(private tourService: TourService){}
+    constructor(
+      private tourService: TourService,
+      private mapSnapshotService: MapSnapshotService
+    ){}
 
     ngOnInit(): void {
       this.loadTours();
@@ -49,6 +53,10 @@ export class TourPageComponent implements OnInit {
     }
     showForm()
     {
+      this.formIsShown = true;
+    }
+
+    startEditTour(): void {
       this.formIsShown = true;
     }
 
@@ -83,9 +91,19 @@ export class TourPageComponent implements OnInit {
     addTour(tourDto: any): void {
       console.log("Füge neue Tour hinzu...", tourDto);
       this.tourService.createTour(tourDto).subscribe({
-        next: (newTour) => {
+        next: async (newTour) => {
             this.hideForm();
-            this.loadTours(); // Lädt die Liste neu, damit die Backend-ID verfügbar ist
+
+            if (newTour.routeGeoJson) {
+              try {
+                const snapshotBlob = await this.mapSnapshotService.createSnapshot(JSON.parse(newTour.routeGeoJson));
+                await this.tourService.uploadTourImage(newTour.id, snapshotBlob).toPromise();
+              } catch (error) {
+                console.error('Fehler beim Erzeugen oder Upload des Kartenbildes:', error);
+              }
+            }
+
+            this.loadTours();
         },
         error: (err) => console.error("Fehler beim Erstellen der Tour:", err)
       });
@@ -94,10 +112,18 @@ export class TourPageComponent implements OnInit {
     updateTour(id: number, tourDto: any): void {
       console.log("Aktualisiere Tour...", id, tourDto);
       
-      // ACHTUNG: Dein TourService muss updateTour(id, dto) unterstützen!
       this.tourService.updateTour(id, tourDto).subscribe({
-        next: () => {
+        next: async (updatedTour) => {
           this.hideForm();
+
+          if (updatedTour.routeGeoJson) {
+            try {
+              const snapshotBlob = await this.mapSnapshotService.createSnapshot(JSON.parse(updatedTour.routeGeoJson));
+              await this.tourService.uploadTourImage(updatedTour.id, snapshotBlob).toPromise();
+            } catch (error) {
+              console.error('Fehler beim Erzeugen oder Upload des Kartenbildes nach dem Update:', error);
+            }
+          }
 
           this.refreshSelectedTour(); 
         },

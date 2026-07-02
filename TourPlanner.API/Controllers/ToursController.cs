@@ -5,6 +5,7 @@ using TourPlanner.BL;
 using Microsoft.EntityFrameworkCore;
 using TourPlanner.DAL.Repositories;
 using TourPlanner.BL.DTOs;
+using Microsoft.AspNetCore.Hosting;
 
 namespace TourPlanner.API.Controllers;
 
@@ -12,19 +13,18 @@ namespace TourPlanner.API.Controllers;
 [ApiController]
 public class ToursController : ControllerBase
 {
-    //private readonly TourPlannerContext _context;
     private readonly ITourService _tourService;
+    private readonly IWebHostEnvironment _environment;
 
-    public ToursController(ITourService tourService)
+    public ToursController(ITourService tourService, IWebHostEnvironment environment)
     {
         //_context = context;
         _tourService = tourService;
+        _environment = environment;
     }
-
-    // Speichert eine neue Tour, die aus dem Angular-Formular kommt
     
     [HttpPost]
-    public ActionResult Create([FromBody] CreateTourDTO tour)
+    public async Task<ActionResult> Create([FromBody] CreateTourDTO tour)
     {
         if (!ModelState.IsValid)
         {
@@ -32,7 +32,7 @@ public class ToursController : ControllerBase
         }
 
         // Add the new tour using the service
-        GetTourDTO newTour = _tourService.AddTour(tour);
+        GetTourDTO newTour = await _tourService.AddTour(tour);
         
         //return new id and tour object (frontend should push this into tour list)
         return CreatedAtAction(nameof(GetById), new { id = newTour.Id }, newTour);  
@@ -48,7 +48,42 @@ public class ToursController : ControllerBase
     {
         return Ok(_tourService.GetTourById(id));
     }
-    
+
+    [HttpPost("{id}/image")]
+    public async Task<ActionResult<GetTourDTO>> UploadImage(int id, IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest("No image uploaded.");
+        }
+
+        try
+        {
+            var rootPath = _environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var uploadsFolder = Path.Combine(rootPath, "images");
+
+            Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = $"tour_{id}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            await using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var relativePath = $"/images/{fileName}";
+            var updatedTour = _tourService.UpdateTourImage(id, relativePath);
+
+            return Ok(updatedTour);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Speichern des Bildes: {ex.Message}");
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
@@ -57,13 +92,13 @@ public class ToursController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult Update(int id, [FromBody] CreateTourDTO tour)
+    public async Task<ActionResult> Update(int id, [FromBody] CreateTourDTO tour)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        GetTourDTO updatedTour = _tourService.UpdateTour(id, tour);
+        GetTourDTO updatedTour = await _tourService.UpdateTour(id, tour);
         return Ok(updatedTour);
     }
 }

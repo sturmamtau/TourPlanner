@@ -19,6 +19,7 @@ public class GetTourDTO
 
     public int Popularity { get; set; }
     public int ChildFriendliness { get; set; }
+    public string? RouteGeoJson { get; set; }
     // url for tourmap, ready for frontend
     public string? ImageUrl { get; set; }
     public List<TourLogDTO> TourLogs { get; set; } = new List<TourLogDTO>();

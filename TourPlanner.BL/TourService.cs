@@ -12,9 +12,11 @@ namespace TourPlanner.BL;
 public class TourService : ITourService
 {
     private readonly ITourRepository _tourRepo;
-    public TourService(ITourRepository tourRepo)
+    private readonly IRouteService _routeService;
+    public TourService(ITourRepository tourRepo, IRouteService routeService)
     {
         _tourRepo = tourRepo;
+        _routeService = routeService;
     }
 
     public List<GetTourDTO> GetAllTours()
@@ -24,8 +26,11 @@ public class TourService : ITourService
         return tours.Select(tour => MapToGetTourDTO(tour)).ToList();
     }
 
-    public GetTourDTO AddTour(CreateTourDTO tourDTO)
+    public async Task<GetTourDTO> AddTour(CreateTourDTO tourDTO)
     {
+        // Open route service API Call
+        var route = await _routeService.GetRouteAsync(tourDTO.From, tourDTO.To, tourDTO.TransportType);
+
         var tour = new Tour
         {
             Name = tourDTO.Name,
@@ -33,13 +38,13 @@ public class TourService : ITourService
             From = tourDTO.From,
             To = tourDTO.To,
             TransportType = Enum.Parse<TransportType>(tourDTO.TransportType),
-            TourDistance = 0, // This will be calculated later
-            EstimatedTime = 0, // This will be calculated later
+            TourDistance = (int)Math.Round(route.Distance), //distance from ORS in meters rounded to int
+            EstimatedTime = (int)Math.Round(route.Duration / 60.0), // time from ORS in minutes rounded to int
             ImagePath = "placeholder", // This will be set later
             UserId = 1 // This should be set to the currently logged-in user's ID
         };
         var addedTour = _tourRepo.AddTour(tour);
-        return MapToGetTourDTO(addedTour);
+        return MapToGetTourDTO(addedTour, route.GeoJson);
     }
     public void DeleteTour(int id)
     {
@@ -54,28 +59,42 @@ public class TourService : ITourService
         }
     }
 
-    public GetTourDTO UpdateTour(int id, CreateTourDTO updatedtour)
+    public async Task<GetTourDTO> UpdateTour(int id, CreateTourDTO updatedtour)
     {
         var tourToUpdate = _tourRepo.GetTour(id);
         if (tourToUpdate != null)
         {
+            var route = await _routeService.GetRouteAsync(updatedtour.From, updatedtour.To, updatedtour.TransportType);
+
             tourToUpdate.Name = updatedtour.Name;
             tourToUpdate.Description = updatedtour.Description;
             tourToUpdate.From = updatedtour.From;
             tourToUpdate.To = updatedtour.To;
             tourToUpdate.TransportType = Enum.Parse<TransportType>(updatedtour.TransportType);
-            tourToUpdate.TourDistance = 0; // This will be calculated later
-            tourToUpdate.EstimatedTime = 0; // This will be calculated later
-            tourToUpdate.ImagePath = "placeholder"; // This will be set later
+            tourToUpdate.TourDistance = (int)Math.Round(route.Distance);
+            tourToUpdate.EstimatedTime = (int)Math.Round(route.Duration / 60.0);
             tourToUpdate.UserId = 1; // This should be set to the currently logged-in user's ID - not really necessary here
             _tourRepo.UpdateTour(tourToUpdate);
-            return MapToGetTourDTO(tourToUpdate);
+            return MapToGetTourDTO(tourToUpdate, route.GeoJson);
         }
         else
         {
             throw new KeyNotFoundException($"Tour with id {id} not found");
         }
 
+    }
+
+    public GetTourDTO UpdateTourImage(int id, string imagePath)
+    {
+        var tourToUpdate = _tourRepo.GetTour(id);
+        if (tourToUpdate != null)
+        {
+            tourToUpdate.ImagePath = imagePath;
+            _tourRepo.UpdateTour(tourToUpdate);
+            return MapToGetTourDTO(tourToUpdate);
+        }
+
+        throw new KeyNotFoundException($"Tour with id {id} not found");
     }
 
     public GetTourDTO GetTourById(int id)
@@ -90,7 +109,7 @@ public class TourService : ITourService
         return MapToGetTourDTO(tour);
     }
 
-    private GetTourDTO MapToGetTourDTO(Tour tour)
+    private GetTourDTO MapToGetTourDTO(Tour tour, string? routeGeoJson = null)
     {
         return new GetTourDTO
         {
@@ -102,6 +121,7 @@ public class TourService : ITourService
             TransportType = tour.TransportType.ToString(),
             TourDistance = tour.TourDistance,
             EstimatedTime = tour.EstimatedTime,
+            RouteGeoJson = routeGeoJson,
             ImageUrl = tour.ImagePath != null
                 ? $"/images/{Path.GetFileName(tour.ImagePath)}"
                 : null,

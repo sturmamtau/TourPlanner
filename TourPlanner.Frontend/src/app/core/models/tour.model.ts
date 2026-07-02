@@ -21,4 +21,6 @@ export interface Tour {
   childfriendliness: number;
   userId: number;
   tourLogs: TourLog[];
+  routeGeoJson?: string;
+
 }
