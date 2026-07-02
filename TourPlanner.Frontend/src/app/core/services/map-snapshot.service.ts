@@ -34,7 +34,7 @@ export class MapSnapshotService {
     map.fitBounds(bounds, { padding: [20, 20] });
 
     await this.waitForTiles(map);
-    await this.waitForNextFrame(); // Canvas-Repaint abwarten
+    await this.waitForNextFrame(); // await canvas repaint
 
     const blob = await this.exportCanvas(map);
 
@@ -69,7 +69,7 @@ private waitForNextFrame(): Promise<void> {
         }
       });
 
-      // Fallback, falls 'load' aus irgendeinem Grund nicht feuert
+      // Ffallback if load doesnt work
       setTimeout(() => {
         if (!loaded) {
           loaded = true;

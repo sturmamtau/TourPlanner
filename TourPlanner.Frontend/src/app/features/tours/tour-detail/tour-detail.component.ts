@@ -12,6 +12,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class TourDetailComponent {
   @Output() deleteTourEvent = new EventEmitter();
+  @Output() editTourEvent = new EventEmitter<void>();
   @Output() updateTourEvent = new EventEmitter<void>();
   private _tour!: Tour;
   readonly backendUrl = environment.apiUrl;
@@ -30,7 +31,7 @@ export class TourDetailComponent {
   }
 
   updateTour(): void{
-        this.updateTourEvent.emit();
+        this.editTourEvent.emit();
   }
 
   onLogChanged() {

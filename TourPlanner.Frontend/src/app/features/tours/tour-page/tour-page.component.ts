@@ -56,6 +56,10 @@ export class TourPageComponent implements OnInit {
       this.formIsShown = true;
     }
 
+    startEditTour(): void {
+      this.formIsShown = true;
+    }
+
     //select tour for detal view
     onTourSelected(tour: Tour) {
       this.selectedTour = tour;
@@ -108,10 +112,18 @@ export class TourPageComponent implements OnInit {
     updateTour(id: number, tourDto: any): void {
       console.log("Aktualisiere Tour...", id, tourDto);
       
-      // ACHTUNG: Dein TourService muss updateTour(id, dto) unterstützen!
       this.tourService.updateTour(id, tourDto).subscribe({
-        next: () => {
+        next: async (updatedTour) => {
           this.hideForm();
+
+          if (updatedTour.routeGeoJson) {
+            try {
+              const snapshotBlob = await this.mapSnapshotService.createSnapshot(JSON.parse(updatedTour.routeGeoJson));
+              await this.tourService.uploadTourImage(updatedTour.id, snapshotBlob).toPromise();
+            } catch (error) {
+              console.error('Fehler beim Erzeugen oder Upload des Kartenbildes nach dem Update:', error);
+            }
+          }
 
           this.refreshSelectedTour(); 
         },

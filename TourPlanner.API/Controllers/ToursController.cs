@@ -92,13 +92,13 @@ public class ToursController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult Update(int id, [FromBody] CreateTourDTO tour)
+    public async Task<ActionResult> Update(int id, [FromBody] CreateTourDTO tour)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        GetTourDTO updatedTour = _tourService.UpdateTour(id, tour);
+        GetTourDTO updatedTour = await _tourService.UpdateTour(id, tour);
         return Ok(updatedTour);
     }
 }

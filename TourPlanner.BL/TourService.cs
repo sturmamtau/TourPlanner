@@ -59,22 +59,23 @@ public class TourService : ITourService
         }
     }
 
-    public GetTourDTO UpdateTour(int id, CreateTourDTO updatedtour)
+    public async Task<GetTourDTO> UpdateTour(int id, CreateTourDTO updatedtour)
     {
         var tourToUpdate = _tourRepo.GetTour(id);
         if (tourToUpdate != null)
         {
+            var route = await _routeService.GetRouteAsync(updatedtour.From, updatedtour.To, updatedtour.TransportType);
+
             tourToUpdate.Name = updatedtour.Name;
             tourToUpdate.Description = updatedtour.Description;
             tourToUpdate.From = updatedtour.From;
             tourToUpdate.To = updatedtour.To;
             tourToUpdate.TransportType = Enum.Parse<TransportType>(updatedtour.TransportType);
-            tourToUpdate.TourDistance = 0; // This will be calculated later
-            tourToUpdate.EstimatedTime = 0; // This will be calculated later
-            tourToUpdate.ImagePath = ""; // This will be set later
+            tourToUpdate.TourDistance = (int)Math.Round(route.Distance);
+            tourToUpdate.EstimatedTime = (int)Math.Round(route.Duration / 60.0);
             tourToUpdate.UserId = 1; // This should be set to the currently logged-in user's ID - not really necessary here
             _tourRepo.UpdateTour(tourToUpdate);
-            return MapToGetTourDTO(tourToUpdate);
+            return MapToGetTourDTO(tourToUpdate, route.GeoJson);
         }
         else
         {

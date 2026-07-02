@@ -13,7 +13,7 @@ public interface ITourService
     //evtl andere DTOS nötig
     List<GetTourDTO> GetAllTours();
     GetTourDTO GetTourById(int id);
-    GetTourDTO UpdateTour(int id, CreateTourDTO tour);
+    Task<GetTourDTO> UpdateTour(int id, CreateTourDTO tour);
     GetTourDTO UpdateTourImage(int id, string imagePath);
     Task<GetTourDTO> AddTour(CreateTourDTO tour); 
     void DeleteTour(int id);
