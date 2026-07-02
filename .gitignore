@@ -18,6 +18,9 @@ app/**/*.js.map
 node_modules/
 bower_components/
 
+# Igignore tou rimages
+wwwroot/images/
+
 # IDEs and editors
 .idea/
 
