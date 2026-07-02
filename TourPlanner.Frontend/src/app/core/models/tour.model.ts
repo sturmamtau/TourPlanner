@@ -22,5 +22,4 @@ export interface Tour {
   userId: number;
   tourLogs: TourLog[];
   routeGeoJson?: string;
-
 }
